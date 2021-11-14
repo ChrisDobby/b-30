@@ -15,6 +15,7 @@
     },
     "devDependencies": {
         "@material/typography": "^13.0.0",
+        "@smui/button": "^5.0.0",
         "@smui/common": "^5.0.0",
         "@smui/icon-button": "^5.0.0",
         "@smui/top-app-bar": "^5.0.0",
