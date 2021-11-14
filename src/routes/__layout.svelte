@@ -36,6 +36,7 @@
 
     footer {
         padding: 4px;
+        padding-bottom: 16px;
         text-align: center;
         background-color: var(--mdc-theme-surface, #212125);
     }
