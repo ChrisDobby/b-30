@@ -1,10 +1,3 @@
-<script context="module">
-    /** @type {import('@sveltejs/kit').Load} */
-    export async function load({ session }) {
-        return { props: { user: session.user } };
-    }
-</script>
-
 <script lang="ts">
     import "../app.scss";
 </script>

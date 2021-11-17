@@ -7,6 +7,9 @@ const config = {
     kit: {
         adapter: adapter(),
         target: "#svelte",
+        vite: {
+            define: { "process.env": process.env },
+        },
     },
 };
 
