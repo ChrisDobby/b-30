@@ -6,6 +6,7 @@ export async function get({ query }: ServerRequest): Promise<EndpointOutput> {
     try {
         const code = query.get("code");
         const scope = query.get("scope");
+        const redirect = query.get("redirect_to");
 
         if (!code || !scope) {
             return {
@@ -19,7 +20,7 @@ export async function get({ query }: ServerRequest): Promise<EndpointOutput> {
         return {
             headers: {
                 "Set-Cookie": getCookies(token),
-                Location: "/activities",
+                Location: redirect || "/activities",
             },
             status: 302,
         };

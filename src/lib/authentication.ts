@@ -39,7 +39,7 @@ function getHostUrl(page: Page) {
 }
 
 function getRedirectUri(page: Page) {
-    return `${getHostUrl(page)}/api/authenticated`;
+    return `${getHostUrl(page)}/api/authenticated?redirect_to=${page.path}`;
 }
 
 export const secure =
@@ -50,18 +50,18 @@ export const secure =
             page,
         } = args;
 
-        if (!user) {
-            const authUrl = `${STRAVA_AUTHORISE_URL}?client_id=${STRAVA_CLIENT_ID}&redirect_uri=${getRedirectUri(
-                page,
-            )}&response_type=code&approval_prompt=auto&scope=activity:read_all`;
-
-            return {
-                status: 302,
-                redirect: authUrl,
-            };
+        if (user) {
+            return loader(args);
         }
 
-        return loader(args);
+        const authUrl = `${STRAVA_AUTHORISE_URL}?client_id=${STRAVA_CLIENT_ID}&redirect_uri=${getRedirectUri(
+            page,
+        )}&response_type=code&approval_prompt=auto&scope=activity:read_all`;
+
+        return {
+            status: 302,
+            redirect: authUrl,
+        };
     };
 
 export function getCookies(auth: Auth): string[] {
