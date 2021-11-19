@@ -1,20 +1,37 @@
-import type { Session } from "$lib/types";
-import type { Request } from "@sveltejs/kit";
+import { getCookies, retrieveToken } from "$lib/authentication";
+import type { Auth, AuthenticatedAthlete, Session, User } from "$lib/types";
+import type { Request, Handle } from "@sveltejs/kit";
 import cookie from "cookie";
 
-export function getSession(request: Request): Session {
-    const { strava_token } = cookie.parse(request.headers.cookie || "");
-    if (!strava_token) {
-        return {};
+function createUserFromToken({ id, firstname, lastname, profile }: AuthenticatedAthlete): User {
+    return {
+        id: id,
+        firstName: firstname,
+        lastName: lastname,
+        profile: profile,
+    };
+}
+
+export const handle: Handle = async ({ request, resolve }) => {
+    const { strava_token, strava_refresh, strava_athlete } = cookie.parse(request.headers.cookie || "");
+
+    let refreshed: Auth | null = null;
+    if (strava_athlete && strava_token) {
+        request.locals.user = createUserFromToken(JSON.parse(strava_athlete));
+    } else if (strava_athlete && strava_refresh) {
+        const { token, scope } = JSON.parse(strava_refresh);
+        refreshed = await retrieveToken({ refreshToken: token, scope });
+        request.locals.user = createUserFromToken(JSON.parse(strava_athlete));
     }
 
-    const strava = JSON.parse(strava_token);
-    return {
-        user: {
-            id: strava.id,
-            firstName: strava.firstname,
-            lastName: strava.lastname,
-            profile: strava.profile,
-        },
-    };
+    const response = await resolve(request);
+    if (refreshed) {
+        response.headers["Set-Cookie"] = getCookies(refreshed);
+    }
+
+    return response;
+};
+
+export function getSession(request: Request): Session {
+    return request.locals.user ? { user: request.locals.user } : {};
 }

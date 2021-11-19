@@ -1,6 +1,5 @@
 import type { EndpointOutput } from "@sveltejs/kit";
-import { retrieveToken } from "$lib/authentication";
-import cookie from "cookie";
+import { getCookies, retrieveToken } from "$lib/authentication";
 import type { ServerRequest } from "@sveltejs/kit/types/hooks";
 
 export async function get({ query }: ServerRequest): Promise<EndpointOutput> {
@@ -19,14 +18,7 @@ export async function get({ query }: ServerRequest): Promise<EndpointOutput> {
 
         return {
             headers: {
-                "Set-Cookie": [
-                    cookie.serialize("strava_token", JSON.stringify(token), {
-                        path: "/",
-                        httpOnly: true,
-                        expires: new Date(token.expires_at * 1000),
-                    }),
-                    cookie.serialize("strava_refresh_token", token.refresh_token, { path: "/", httpOnly: true }),
-                ],
+                "Set-Cookie": getCookies(token),
                 Location: "/activities",
             },
             status: 302,

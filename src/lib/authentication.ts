@@ -1,5 +1,6 @@
-import type { LoadInput, Load } from "@sveltejs/kit";
+import type { LoadInput, Load, Page } from "@sveltejs/kit";
 import type { Auth } from "$lib/types";
+import cookie from "cookie";
 
 const STRAVA_CLIENT_ID = process.env.STRAVA_CLIENT_ID || "";
 const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET || "";
@@ -25,21 +26,19 @@ export async function retrieveToken({ code, refreshToken, scope }: RetrieveToken
     });
 
     const { athlete, ...stravaJson } = await authResponse.json();
+
     return {
         ...stravaJson,
         scope,
-        id: athlete.id,
-        firstname: athlete.firstname,
-        lastname: athlete.lastname,
-        profile: athlete.profile,
+        athlete,
     };
 }
 
-function getHostUrl(page) {
-    return `http://${page.host}`;
+function getHostUrl(page: Page) {
+    return `${page.host.startsWith("localhost") ? "http" : "https"}://${page.host}`;
 }
 
-function getRedirectUri(page) {
+function getRedirectUri(page: Page) {
     return `${getHostUrl(page)}/api/authenticated`;
 }
 
@@ -64,3 +63,23 @@ export const secure =
 
         return loader(args);
     };
+
+export function getCookies(auth: Auth): string[] {
+    const cookies = [
+        cookie.serialize("strava_token", auth.access_token, {
+            path: "/",
+            httpOnly: true,
+            expires: new Date(auth.expires_at * 1000),
+        }),
+        cookie.serialize("strava_refresh", JSON.stringify({ token: auth.refresh_token, scope: auth.scope }), {
+            path: "/",
+            httpOnly: true,
+        }),
+    ];
+
+    if (auth.athlete) {
+        cookies.push(cookie.serialize("strava_athlete", JSON.stringify(auth.athlete), { path: "/", httpOnly: true }));
+    }
+
+    return cookies;
+}

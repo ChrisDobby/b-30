@@ -9,13 +9,16 @@ export type Session = {
     user?: User;
 };
 
+export type AuthenticatedAthlete = {
+    id: string;
+    firstname: string;
+    lastname: string;
+    profile: string;
+};
 export type Auth = {
     access_token: string;
     refresh_token: string;
     expires_at: number;
     scope: string;
-    id: string;
-    firstname: string;
-    lastname: string;
-    profile: string;
+    athlete?: AuthenticatedAthlete;
 };
