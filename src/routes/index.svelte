@@ -6,6 +6,8 @@
                 redirect: "/activities",
             };
         }
+
+        return {};
     };
 </script>
 
