@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { StravaActivity } from "$lib/types";
-    import Card, { Content } from "@smui/card";
+    import Card, { Content, Actions, ActionButtons } from "@smui/card";
+    import Button from "@smui/button";
 
     export let activity: StravaActivity;
 </script>
@@ -13,8 +14,15 @@
             <div class="activity-data">{`Distance: ${activity.distance}`}</div>
             <div class="activity-data">{`Time: ${activity.time}`}</div>
             <div class="activity-data">{`Pace: ${activity.pace}`}</div>
-        </Content></Card
-    >
+        </Content>
+        <Actions>
+            <ActionButtons>
+                <Button href={`https://www.strava.com/activities/${activity.id}`} target="__blank" rel="noreferrer"
+                    >View in Strava</Button
+                >
+            </ActionButtons>
+        </Actions>
+    </Card>
 </li>
 
 <style>

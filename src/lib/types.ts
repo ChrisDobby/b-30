@@ -25,6 +25,7 @@ export type Auth = {
 };
 
 export type StravaActivity = {
+    id: string;
     name: string;
     date: string;
     distance: string;
