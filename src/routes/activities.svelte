@@ -1,22 +1,38 @@
 <script context="module" lang="ts">
     import { secure } from "$lib/authentication";
+    import { format } from "date-fns";
     export const load = secure(async ({ session, fetch }) => {
         const activitiesResponse = await fetch("https://www.strava.com/api/v3/athlete/activities", {
             headers: { Authorization: `Bearer ${session.token}` },
         });
-        return { props: { activities: await activitiesResponse.json() } };
+
+        const activities = (await activitiesResponse.json()).map(activity => ({
+            id: activity.id,
+            name: activity.name,
+            date: format(new Date(activity.start_date), "dd-MMM-yyyy HH:mm"),
+        }));
+        return { props: { activities } };
     });
 </script>
 
 <script lang="ts">
     import type { StravaActivity } from "$lib/types";
+    import ActivityCard from "$lib/activityCard.svelte";
     import "../app.scss";
 
     export let activities: StravaActivity[];
 </script>
 
-<ul>
+<ul class="card-display">
     {#each activities as activity}
-        <li><span>{`${activity.name} - ${activity.start_date}`}</span></li>
+        <ActivityCard {activity} />
     {/each}
 </ul>
+
+<style>
+    .card-display {
+        margin: 0;
+        list-style-type: none;
+        padding-left: 0;
+    }
+</style>
