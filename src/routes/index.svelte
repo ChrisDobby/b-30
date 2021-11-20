@@ -1,3 +1,7 @@
+<script lang="ts">
+    import "../app.scss";
+</script>
+
 <div class="coming-soon">
     <h4>Coming soon!</h4>
 </div>
