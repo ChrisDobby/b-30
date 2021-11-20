@@ -7,6 +7,7 @@ export type User = {
 
 export type Session = {
     user?: User;
+    token?: string;
 };
 
 export type AuthenticatedAthlete = {
@@ -21,4 +22,9 @@ export type Auth = {
     expires_at: number;
     scope: string;
     athlete?: AuthenticatedAthlete;
+};
+
+export type StravaActivity = {
+    name: string;
+    start_date: string;
 };
