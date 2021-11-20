@@ -1,3 +1,14 @@
+<script context="module" lang="ts">
+    export const load = async ({ session }) => {
+        if (session.user) {
+            return {
+                status: 302,
+                redirect: "/activities",
+            };
+        }
+    };
+</script>
+
 <script lang="ts">
     import "../app.scss";
 </script>
