@@ -25,6 +25,10 @@ export type Auth = {
 };
 
 export type StravaActivity = {
+    id: string;
     name: string;
-    start_date: string;
+    date: string;
+    distance: string;
+    time: string;
+    pace: string;
 };

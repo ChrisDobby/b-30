@@ -16,6 +16,7 @@
     "devDependencies": {
         "@material/typography": "^13.0.0",
         "@smui/button": "^5.0.0",
+        "@smui/card": "^5.0.0",
         "@smui/common": "^5.0.0",
         "@smui/icon-button": "^5.0.0",
         "@smui/top-app-bar": "^5.0.0",
@@ -40,6 +41,8 @@
     "type": "module",
     "dependencies": {
         "@types/cookie": "^0.4.1",
-        "cookie": "^0.4.1"
+        "@types/date-fns": "^2.6.0",
+        "cookie": "^0.4.1",
+        "date-fns": "^2.26.0"
     }
 }
