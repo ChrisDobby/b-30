@@ -10,6 +10,9 @@
         ><Content
             ><div class="activity-name">{activity.name}</div>
             <div class="activity-date">{activity.date}</div>
+            <div class="activity-data">{`Distance: ${activity.distance}`}</div>
+            <div class="activity-data">{`Time: ${activity.time}`}</div>
+            <div class="activity-data">{`Pace: ${activity.pace}`}</div>
         </Content></Card
     >
 </li>
@@ -27,5 +30,9 @@
     .activity-date {
         font-size: 0.8rem;
         color: #999;
+    }
+
+    .activity-data {
+        font-size: 0.9rem;
     }
 </style>
