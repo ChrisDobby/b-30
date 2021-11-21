@@ -1,3 +1,5 @@
+import type { Times } from "./types";
+
 const METRES_IN_KM = 1000;
 const SECONDS_IN_MINUTE = 60;
 const MINUTES_IN_HOUR = 60;
@@ -38,4 +40,17 @@ export function calculateSpeedAndPace(metresPerSecond: number): [string, string]
     const kmPerHour = metresPerHour / METRES_IN_KM;
     const secondsPerKm = METRES_IN_KM / metresPerSecond;
     return [`${to2Decimals(kmPerHour)} km/hour`, `${timeFromSeconds(secondsPerKm)}/km`];
+}
+
+export function calculateTimes(metresPerSecond: number): Times {
+    const secondsFor5k = Math.floor((METRES_IN_KM / metresPerSecond) * 5);
+
+    return {
+        recovery: [secondsFor5k + 56, secondsFor5k + 75],
+        tempo: [secondsFor5k + 12, secondsFor5k + 19],
+        five: [secondsFor5k - 2, secondsFor5k + 2],
+        ten: [secondsFor5k + 9, secondsFor5k + 16],
+        overPace: [secondsFor5k - 19, secondsFor5k - 12],
+        strides: [secondsFor5k - 37, secondsFor5k - 25],
+    };
 }
