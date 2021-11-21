@@ -40,7 +40,6 @@
                 settingTimesError = true;
             }
         } catch (e) {
-            console.log("error");
             settingTimesError = true;
         } finally {
             settingTimes = false;
