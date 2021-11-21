@@ -37,6 +37,7 @@ export type StravaActivity = {
 };
 
 export type Times = {
+    date5k: number;
     recovery: [number, number];
     tempo: [number, number];
     ten: [number, number];

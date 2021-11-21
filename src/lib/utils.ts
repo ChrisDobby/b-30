@@ -43,14 +43,15 @@ export function calculateSpeedAndPace(metresPerSecond: number): [string, string]
 }
 
 export function calculateTimes(metresPerSecond: number): Times {
-    const secondsFor5k = Math.floor((METRES_IN_KM / metresPerSecond) * 5);
+    const date5k = Math.floor((METRES_IN_KM / metresPerSecond) * 5);
 
     return {
-        recovery: [secondsFor5k + 56, secondsFor5k + 75],
-        tempo: [secondsFor5k + 12, secondsFor5k + 19],
-        five: [secondsFor5k - 2, secondsFor5k + 2],
-        ten: [secondsFor5k + 9, secondsFor5k + 16],
-        overPace: [secondsFor5k - 19, secondsFor5k - 12],
-        strides: [secondsFor5k - 37, secondsFor5k - 25],
+        date5k,
+        recovery: [date5k + 56, date5k + 75],
+        tempo: [date5k + 12, date5k + 19],
+        five: [date5k - 2, date5k + 2],
+        ten: [date5k + 9, date5k + 16],
+        overPace: [date5k - 19, date5k - 12],
+        strides: [date5k - 37, date5k - 25],
     };
 }
