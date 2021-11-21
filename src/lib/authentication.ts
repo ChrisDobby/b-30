@@ -1,5 +1,5 @@
 import type { LoadInput, Load, Page } from "@sveltejs/kit";
-import type { Auth } from "$lib/types";
+import type { Auth, Api } from "$lib/types";
 import cookie from "cookie";
 
 const STRAVA_CLIENT_ID = process.env.STRAVA_CLIENT_ID || "";
@@ -42,7 +42,19 @@ function getRedirectUri(page: Page) {
     return `${getHostUrl(page)}/api/authenticated?redirect_to=${page.path}`;
 }
 
-export const secure =
+export const secureApi =
+    (api: Api): Api =>
+    async (request, args) => {
+        const { locals } = request;
+
+        if (!locals.user) {
+            return { status: 401 };
+        }
+
+        return api(request, args);
+    };
+
+export const securePage =
     (loader: Load): Load =>
     async (args: LoadInput) => {
         const {

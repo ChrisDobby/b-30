@@ -19,15 +19,18 @@
         "@smui/card": "^5.0.0",
         "@smui/common": "^5.0.0",
         "@smui/icon-button": "^5.0.0",
+        "@smui/snackbar": "^5.0.0",
         "@smui/top-app-bar": "^5.0.0",
         "@sveltejs/adapter-netlify": "^1.0.0-next.35",
         "@sveltejs/kit": "next",
+        "@types/firebase": "^3.2.1",
         "@typescript-eslint/eslint-plugin": "^4.31.1",
         "@typescript-eslint/parser": "^4.31.1",
         "env-cmd": "^10.1.0",
         "eslint": "^7.32.0",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-svelte3": "^3.2.1",
+        "faye-websocket": "0.11.4",
         "husky": "^7.0.4",
         "prettier": "^2.4.1",
         "prettier-plugin-svelte": "^2.4.0",
@@ -43,6 +46,7 @@
         "@types/cookie": "^0.4.1",
         "@types/date-fns": "^2.6.0",
         "cookie": "^0.4.1",
-        "date-fns": "^2.26.0"
+        "date-fns": "^2.26.0",
+        "firebase": "^9.1.3"
     }
 }

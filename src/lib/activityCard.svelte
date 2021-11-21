@@ -4,6 +4,8 @@
     import Button from "@smui/button";
 
     export let activity: StravaActivity;
+    export let disabled: boolean;
+    export let onSetTimes: () => void;
 </script>
 
 <li class="card-container">
@@ -17,8 +19,12 @@
         </Content>
         <Actions>
             <ActionButtons>
-                <Button href={`https://www.strava.com/activities/${activity.id}`} target="__blank" rel="noreferrer"
-                    >View in Strava</Button
+                <Button on:click={onSetTimes} {disabled}>Set times</Button>
+                <Button
+                    href={`https://www.strava.com/activities/${activity.id}`}
+                    target="__blank"
+                    rel="noreferrer"
+                    {disabled}>View in Strava</Button
                 >
             </ActionButtons>
         </Actions>
