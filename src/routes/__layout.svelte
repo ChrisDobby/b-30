@@ -1,9 +1,11 @@
 <script lang="ts">
     import Button from "@smui/button";
     import Header from "$lib/header.svelte";
+    import UserPanel from "$lib/userPanel.svelte";
 </script>
 
 <Header />
+<UserPanel />
 <main>
     <slot />
 </main>
