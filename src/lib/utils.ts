@@ -47,11 +47,10 @@ export function calculateTimes(metresPerSecond: number): Times {
 
     return {
         date5k,
-        recovery: [date5k + 56, date5k + 75],
-        tempo: [date5k + 12, date5k + 19],
-        five: [date5k - 2, date5k + 2],
-        ten: [date5k + 9, date5k + 16],
-        overPace: [date5k - 19, date5k - 12],
-        strides: [date5k - 37, date5k - 25],
+        recovery: { low: date5k + 56, high: date5k + 75 },
+        tempo: { low: date5k + 12, high: date5k + 19 },
+        five: { low: date5k - 2, high: date5k + 2 },
+        overPace: { low: date5k - 19, high: date5k - 12 },
+        strides: { low: date5k - 37, high: date5k - 25 },
     };
 }

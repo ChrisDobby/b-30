@@ -1,5 +1,6 @@
 import { getCookies, retrieveToken } from "$lib/authentication";
 import type { Auth, AuthenticatedAthlete, Session, User } from "$lib/types";
+import withStore from "$lib/withStore";
 import type { Request, Handle } from "@sveltejs/kit";
 import cookie from "cookie";
 
@@ -34,6 +35,15 @@ export const handle: Handle = async ({ request, resolve }) => {
     return response;
 };
 
-export function getSession(request: Request): Session {
-    return request.locals.user ? { user: request.locals.user, token: request.locals.token } : {};
-}
+export const getSession = withStore(async (request: Request, { store }): Promise<Session> => {
+    if (!request.locals.user) {
+        return {};
+    }
+
+    const times = await store.getTimes(request.locals.user.id);
+    return {
+        user: request.locals.user,
+        token: request.locals.token,
+        times,
+    };
+});
