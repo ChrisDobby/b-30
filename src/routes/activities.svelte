@@ -2,6 +2,7 @@
     import { securePage } from "$lib/authentication";
     import { format } from "date-fns";
     import { calculateSpeedAndPace, distanceInKm, timeFromSeconds } from "$lib/utils";
+
     export const load = securePage(async ({ session, fetch }) => {
         const activitiesResponse = await fetch("https://www.strava.com/api/v3/athlete/activities", {
             headers: { Authorization: `Bearer ${session.token}` },
@@ -24,6 +25,7 @@
     import type { StravaActivity } from "$lib/types";
     import ActivityCard from "$lib/activityCard.svelte";
     import Snackbar, { Label } from "@smui/snackbar";
+    import { session } from "$app/stores";
     import "../app.scss";
 
     export let activities: StravaActivity[];
@@ -38,6 +40,9 @@
             const response = await fetch(`/api/setTimes/${activity.id}`);
             if (!response.ok) {
                 settingTimesError = true;
+            } else {
+                const times = await response.json();
+                $session.times = times;
             }
         } catch (e) {
             settingTimesError = true;
