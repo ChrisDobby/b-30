@@ -4,7 +4,11 @@
     import TimesPanel from "$lib/timesPanel.svelte";
 
     const user = $session.user as User;
-    const times = $session.times as Times;
+    let times = $session.times as Times;
+    session.subscribe(update => {
+        console.log("times changed", update);
+        times = update.times;
+    });
 </script>
 
 {#if user}
