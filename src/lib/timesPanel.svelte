@@ -1,17 +1,15 @@
 <script lang="ts">
     import type { Times } from "$lib/types";
     import { timeFromSeconds, calculateSpeedAndPace } from "$lib/utils";
-    import Button from "@smui/button";
 
     export let times: Times;
     let showingPaces = false;
 </script>
 
-<p>
+<button on:click={() => (showingPaces = !showingPaces)}>
     {`Date 5k time: ${timeFromSeconds(times.date5k)} at ${calculateSpeedAndPace(5000 / times.date5k)[1]}`}
-</p>
-
-<Button on:click={() => (showingPaces = !showingPaces)}>{showingPaces ? "Hide paces" : "View paces"}</Button>
+    <i class={`arrow ${showingPaces ? "up" : "down"}`} />
+</button>
 
 {#if showingPaces}
     <div class="paces">
@@ -39,6 +37,19 @@
 {/if}
 
 <style>
+    button {
+        margin: 0;
+        outline: none;
+        border: none;
+        font-size: 1em;
+        background-color: transparent;
+        text-align: left;
+        color: var(--mdc-theme-on-secondary, #fff);
+        padding: 0;
+        display: flex;
+        align-items: center;
+        column-gap: 1em;
+    }
     p {
         margin: 0;
     }
@@ -47,9 +58,29 @@
         display: grid;
         grid-template-columns: max-content 1fr;
         column-gap: 1em;
+        margin-top: 1em;
     }
 
     .name {
         font-weight: 700;
+    }
+
+    .arrow {
+        border: solid var(--mdc-theme-on-secondary, #fff);
+        border-width: 0 3px 3px 0;
+        display: inline-block;
+        padding: 3px;
+    }
+
+    .up {
+        transform: rotate(-135deg);
+        -webkit-transform: rotate(-135deg);
+        margin-top: 5px;
+    }
+
+    .down {
+        transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+        margin-top: -5px;
     }
 </style>
