@@ -20,15 +20,17 @@ function addLeadingZero(num: number) {
     return `0${num}`;
 }
 
-export function timeFromSeconds(seconds: number): string {
+export function timeFromSeconds(seconds: number, withUnits = true): string {
     const minutes = seconds / SECONDS_IN_MINUTE;
     const hours = minutes / MINUTES_IN_HOUR;
     const fractionSeconds = addLeadingZero(fractionToPartOfTime(minutes % 1));
     if (hours >= 1) {
-        return `${Math.trunc(hours)}:${addLeadingZero(fractionToPartOfTime(hours % 1))}:${fractionSeconds} hrs`;
+        return `${Math.trunc(hours)}:${addLeadingZero(fractionToPartOfTime(hours % 1))}:${fractionSeconds} ${
+            withUnits ? "hrs" : ""
+        }`;
     }
 
-    return `${Math.trunc(minutes)}:${fractionSeconds} mins`;
+    return `${Math.trunc(minutes)}:${fractionSeconds} ${withUnits ? "mins" : ""}`;
 }
 
 export function distanceInKm(distanceInMetres: number): string {
@@ -42,16 +44,16 @@ export function calculateSpeedAndPace(metresPerSecond: number): [string, string]
     return [`${to2Decimals(kmPerHour)} km/hour`, `${timeFromSeconds(secondsPerKm)}/km`];
 }
 
-export function calculateTimes(metresPerSecond: number): Times {
-    const date5k = Math.floor((METRES_IN_KM / metresPerSecond) * 5);
+export function calculatePaces(date5k: number): Times {
+    const date5kSecondsPerKm = METRES_IN_KM / date5k;
+    const date5kTime = Math.floor(date5kSecondsPerKm * 5);
 
     return {
-        date5k,
-        recovery: [date5k + 56, date5k + 75],
-        tempo: [date5k + 12, date5k + 19],
-        five: [date5k - 2, date5k + 2],
-        ten: [date5k + 9, date5k + 16],
-        overPace: [date5k - 19, date5k - 12],
-        strides: [date5k - 37, date5k - 25],
+        date5k: date5kTime,
+        recovery: { low: date5kSecondsPerKm + 56, high: date5kSecondsPerKm + 75 },
+        tempo: { low: date5kSecondsPerKm + 12, high: date5kSecondsPerKm + 19 },
+        five: { low: date5kSecondsPerKm - 2, high: date5kSecondsPerKm + 2 },
+        overPace: { low: date5kSecondsPerKm - 19, high: date5kSecondsPerKm - 12 },
+        strides: { low: date5kSecondsPerKm - 37, high: date5kSecondsPerKm - 25 },
     };
 }

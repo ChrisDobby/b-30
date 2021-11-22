@@ -1,5 +1,5 @@
 import { secureApi } from "$lib/authentication";
-import { calculateTimes } from "$lib/utils";
+import { calculatePaces } from "$lib/utils";
 import withStore from "$lib/withStore";
 import type { Store } from "$lib/types";
 import type { EndpointOutput } from "@sveltejs/kit";
@@ -21,7 +21,7 @@ export const get = withStore(
                 }
 
                 const activity = await activityResponse.json();
-                const times = { ...calculateTimes(activity.average_speed), fromActivityId: activityId };
+                const times = { ...calculatePaces(activity.average_speed), fromActivityId: activityId };
                 await setTimes(activity.athlete.id, times);
 
                 return { status: 200, body: times };
