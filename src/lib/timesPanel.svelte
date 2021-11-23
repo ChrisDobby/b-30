@@ -1,11 +1,11 @@
 <script lang="ts">
     import type { Times } from "$lib/types";
-    import { timeFromSeconds, calculateSpeedAndPace, secondsForUnit, MEASUREMENT_UNITS } from "$lib/utils";
+    import { timeFromSeconds, calculateSpeedAndPace } from "$lib/utils";
     import { session } from "$app/stores";
+    import PaceGrid from "$lib/paceGrid.svelte";
 
     const getSpeedAndPace = calculateSpeedAndPace($session.measurementPreference);
-    const getSeconds = secondsForUnit($session.measurementPreference);
-    const units = MEASUREMENT_UNITS[$session.measurementPreference];
+
     export let times: Times;
     let showingPaces = false;
 </script>
@@ -16,38 +16,7 @@
 </button>
 
 {#if showingPaces}
-    <div class="paces">
-        <p class="name">Recovery</p>
-        <p>
-            {`${timeFromSeconds(getSeconds(times.recovery.low), false)} - ${timeFromSeconds(
-                getSeconds(times.recovery.high),
-            )}/${units}`}
-        </p>
-        <p class="name">Tempo</p>
-        <p>
-            {`${timeFromSeconds(getSeconds(times.tempo.low), false)} - ${timeFromSeconds(
-                getSeconds(times.tempo.high),
-            )}/${units}`}
-        </p>
-        <p class="name">5k</p>
-        <p>
-            {`${timeFromSeconds(getSeconds(times.five.low), false)} - ${timeFromSeconds(
-                getSeconds(times.five.high),
-            )}/${units}`}
-        </p>
-        <p class="name">Overpace</p>
-        <p>
-            {`${timeFromSeconds(getSeconds(times.overPace.low), false)} - ${timeFromSeconds(
-                getSeconds(times.overPace.high),
-            )}/${units}`}
-        </p>
-        <p class="name">Strides</p>
-        <p>
-            {`${timeFromSeconds(getSeconds(times.strides.low), false)} - ${timeFromSeconds(
-                getSeconds(times.strides.high),
-            )}/${units}`}
-        </p>
-    </div>
+    <PaceGrid {times} measurementPreference={$session.measurementPreference} />
 {/if}
 
 <style>
@@ -64,21 +33,6 @@
         align-items: center;
         column-gap: 1em;
     }
-    p {
-        margin: 0;
-    }
-
-    .paces {
-        display: grid;
-        grid-template-columns: max-content 1fr;
-        column-gap: 1em;
-        margin-top: 1em;
-    }
-
-    .name {
-        font-weight: 700;
-    }
-
     .arrow {
         border: solid var(--mdc-theme-on-secondary, #fff);
         border-width: 0 3px 3px 0;

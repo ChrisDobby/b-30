@@ -521,6 +521,19 @@
   dependencies:
     tslib "^2.1.0"
 
+"@material/form-field@^11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@material/form-field/-/form-field-11.0.0.tgz#7839c78502b38503d631b0acd107623b8ccc00b5"
+  integrity sha512-w42PHsq8A+7cgrgBGT5j0h3FTgjs7qvLJFYlwp5QYayC2qTZQa3VsF3OTxuXcn3FVlFnBCwILp0+FfWfRmaH4w==
+  dependencies:
+    "@material/base" "^11.0.0"
+    "@material/feature-targeting" "^11.0.0"
+    "@material/ripple" "^11.0.0"
+    "@material/rtl" "^11.0.0"
+    "@material/theme" "^11.0.0"
+    "@material/typography" "^11.0.0"
+    tslib "^2.1.0"
+
 "@material/icon-button@^11.0.0":
   version "11.0.0"
   resolved "https://registry.yarnpkg.com/@material/icon-button/-/icon-button-11.0.0.tgz#655eb0d44a02fd94f814bdc80bce2e4cfd97ac70"
@@ -608,6 +621,22 @@
     "@material/feature-targeting" "^11.0.0"
     "@material/rtl" "^11.0.0"
     "@material/theme" "^11.0.0"
+    tslib "^2.1.0"
+
+"@material/slider@^11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@material/slider/-/slider-11.0.0.tgz#602693ac057bff307b5d5b0c3921e3e53d64ee24"
+  integrity sha512-EJqYV4hP6nUHEO/KyhlRZo7ZN+O5kVNdN6TRU8yTQiAVk9nwvviPhVDdHGj3FvnF1y86fnGvt1zS/MFCP923cg==
+  dependencies:
+    "@material/animation" "^11.0.0"
+    "@material/base" "^11.0.0"
+    "@material/dom" "^11.0.0"
+    "@material/elevation" "^11.0.0"
+    "@material/feature-targeting" "^11.0.0"
+    "@material/ripple" "^11.0.0"
+    "@material/rtl" "^11.0.0"
+    "@material/theme" "^11.0.0"
+    "@material/typography" "^11.0.0"
     tslib "^2.1.0"
 
 "@material/snackbar@^11.0.0":
@@ -835,6 +864,17 @@
     tslib "^2.3.1"
     typescript "^4.4.2"
 
+"@smui/form-field@^5.0.0":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@smui/form-field/-/form-field-5.0.1.tgz#e9b8001bd2ceebdd3ffc913cc09cfaf5764fcff1"
+  integrity sha512-e3K5t5zNxdLDsSvfWas8tYv6Nk/MElhwFF7+X6zMixgOXJErr7sj4bkHfA07wtho5SflzCYFF5tYeMln9UiLRw==
+  dependencies:
+    "@material/feature-targeting" "^11.0.0"
+    "@material/form-field" "^11.0.0"
+    "@material/rtl" "^11.0.0"
+    "@smui/common" "^5.0.1"
+    svelte2tsx "^0.4.6"
+
 "@smui/icon-button@^5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@smui/icon-button/-/icon-button-5.0.0.tgz#09105a58af8b3e966ec10f6ed28bf9d52276df4a"
@@ -857,7 +897,7 @@
     "@smui/ripple" "^5.0.1"
     svelte2tsx "^0.4.6"
 
-"@smui/list@^5.0.1":
+"@smui/list@^5.0.0", "@smui/list@^5.0.1":
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/@smui/list/-/list-5.0.1.tgz#7b3f0ddf4ec61e1acfcdfc1b319f3933b207d9a1"
   integrity sha512-MxPMYwroob8HoQDn+CvPRCaxiidio3lBYcVmjEf2VBC/Jz6g2XupmyTwEQ0/wVOrstLpCvQ9yWp2iRqfyHT23Q==
@@ -909,6 +949,17 @@
     "@material/dom" "^11.0.0"
     "@material/ripple" "^11.0.0"
     "@smui/common" "^5.0.1"
+    svelte2tsx "^0.4.6"
+
+"@smui/slider@^5.0.0":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@smui/slider/-/slider-5.0.1.tgz#84e2744cd30c83f93bcb160a97c3aa705b9815a9"
+  integrity sha512-Nh/gjH00DHTeMui7ZoyyMlYsGiYh+uYvrzJ0NN95ue2gGLSh/vcbzwMtUyAYNDJ4PCzi+VeCWfOuVnQ86Vg8fQ==
+  dependencies:
+    "@material/dom" "^11.0.0"
+    "@material/slider" "^11.0.0"
+    "@smui/common" "^5.0.1"
+    "@smui/ripple" "^5.0.1"
     svelte2tsx "^0.4.6"
 
 "@smui/snackbar@^5.0.0":

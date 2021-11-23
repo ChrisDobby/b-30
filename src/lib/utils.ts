@@ -69,10 +69,7 @@ export const calculateSpeedAndPace =
         return [`${to2Decimals(kmPerHour)} ${unit}/hour`, `${timeFromSeconds(secondsPerKm)}/${unit}`];
     };
 
-export function calculatePaces(date5k: number): Times {
-    const date5kSecondsPerKm = METRES_IN_KM / date5k;
-    const date5kTime = Math.floor(date5kSecondsPerKm * 5);
-
+function getPaces(date5kTime: number, date5kSecondsPerKm: number): Times {
     return {
         date5k: date5kTime,
         recovery: { low: date5kSecondsPerKm + 56, high: date5kSecondsPerKm + 75 },
@@ -81,4 +78,16 @@ export function calculatePaces(date5k: number): Times {
         overPace: { low: date5kSecondsPerKm - 19, high: date5kSecondsPerKm - 12 },
         strides: { low: date5kSecondsPerKm - 37, high: date5kSecondsPerKm - 25 },
     };
+}
+
+export function calculatePaces(date5k: number): Times {
+    const date5kSecondsPerKm = METRES_IN_KM / date5k;
+    const date5kTime = Math.floor(date5kSecondsPerKm * 5);
+
+    return getPaces(date5kTime, date5kSecondsPerKm);
+}
+
+export function calculatePacesFromTime(date5kTime: number): Times {
+    const date5kSecondsPerKm = date5kTime / 5;
+    return getPaces(date5kTime, date5kSecondsPerKm);
 }
