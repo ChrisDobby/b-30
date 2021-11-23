@@ -68,7 +68,7 @@ export const securePage =
 
         const authUrl = `${STRAVA_AUTHORISE_URL}?client_id=${STRAVA_CLIENT_ID}&redirect_uri=${getRedirectUri(
             page,
-        )}&response_type=code&approval_prompt=auto&scope=activity:read_all`;
+        )}&response_type=code&approval_prompt=auto&scope=activity:read_all,profile:read_all`;
 
         return {
             status: 302,

@@ -6,7 +6,6 @@
     const user = $session.user as User;
     let times = $session.times as Times;
     session.subscribe(update => {
-        console.log("times changed", update);
         times = update.times;
     });
 </script>
