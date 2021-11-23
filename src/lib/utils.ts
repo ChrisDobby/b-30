@@ -46,13 +46,13 @@ export const MEASUREMENT_UNITS = {
 };
 
 export const secondsForUnit =
-    (measurementPreference: MeasurementPreference) =>
+    (measurementPreference = MeasurementPreference.Metric) =>
     (secondsPerKm: number): number => {
         return (secondsPerKm / METRES_IN_KM) * MEASUREMENT_METRES[measurementPreference];
     };
 
 export const distance =
-    (measurementPreference: MeasurementPreference) =>
+    (measurementPreference = MeasurementPreference.Metric) =>
     (distanceInMetres: number): string => {
         const metres = MEASUREMENT_METRES[measurementPreference];
         const unit = MEASUREMENT_UNITS[measurementPreference];
@@ -60,7 +60,7 @@ export const distance =
     };
 
 export const calculateSpeedAndPace =
-    (measurementPreference: MeasurementPreference) =>
+    (measurementPreference = MeasurementPreference.Metric) =>
     (metresPerSecond: number): [string, string] => {
         const metresPerHour = metresPerSecond * SECONDS_IN_MINUTE * MINUTES_IN_HOUR;
         const kmPerHour = metresPerHour / MEASUREMENT_METRES[measurementPreference];
