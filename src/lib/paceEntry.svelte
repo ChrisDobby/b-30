@@ -8,11 +8,12 @@
     export let secondsPerKm = 360;
     export let label: string;
     export let distance: number;
+    export let disabled = false;
 </script>
 
 <p>{label}</p>
 <FormField align="end" style="display: flex;">
-    <Slider style="flex-grow: 1; margin: 0;" bind:value={secondsPerKm} min={180} max={600} />
+    <Slider style="flex-grow: 1; margin: 0;" bind:value={secondsPerKm} min={180} max={600} {disabled} />
 </FormField>
 <p class="time-description">
     {timeFromSeconds(secondsPerKm * (distance / 1000))}({timeFromSeconds(secondsPerKm)}/{units})
