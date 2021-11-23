@@ -19,10 +19,16 @@ export type Times = {
     fromActivityId?: string;
 };
 
+export enum MeasurementPreference {
+    Metric = "meters",
+    Imperial = "feet",
+}
+
 export type Session = {
     user?: User;
     token?: string;
     times?: Times;
+    measurementPreference?: MeasurementPreference;
 };
 
 export type AuthenticatedAthlete = {

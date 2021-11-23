@@ -1,13 +1,17 @@
 <script lang="ts">
     import type { Times } from "$lib/types";
-    import { timeFromSeconds, calculateSpeedAndPace } from "$lib/utils";
+    import { timeFromSeconds, calculateSpeedAndPace, secondsForUnit, MEASUREMENT_UNITS } from "$lib/utils";
+    import { session } from "$app/stores";
 
+    const getSpeedAndPace = calculateSpeedAndPace($session.measurementPreference);
+    const getSeconds = secondsForUnit($session.measurementPreference);
+    const units = MEASUREMENT_UNITS[$session.measurementPreference];
     export let times: Times;
     let showingPaces = false;
 </script>
 
 <button on:click={() => (showingPaces = !showingPaces)}>
-    {`Date 5k time: ${timeFromSeconds(times.date5k)} at ${calculateSpeedAndPace(5000 / times.date5k)[1]}`}
+    {`Date 5k time: ${timeFromSeconds(times.date5k)} at ${getSpeedAndPace(5000 / times.date5k)[1]}`}
     <i class={`arrow ${showingPaces ? "up" : "down"}`} />
 </button>
 
@@ -15,23 +19,33 @@
     <div class="paces">
         <p class="name">Recovery</p>
         <p>
-            {`${timeFromSeconds(times.recovery.low, false)} - ${timeFromSeconds(times.recovery.high)}/km`}
+            {`${timeFromSeconds(getSeconds(times.recovery.low), false)} - ${timeFromSeconds(
+                getSeconds(times.recovery.high),
+            )}/${units}`}
         </p>
         <p class="name">Tempo</p>
         <p>
-            {`${timeFromSeconds(times.tempo.low, false)} - ${timeFromSeconds(times.tempo.high)}/km`}
+            {`${timeFromSeconds(getSeconds(times.tempo.low), false)} - ${timeFromSeconds(
+                getSeconds(times.tempo.high),
+            )}/${units}`}
         </p>
         <p class="name">5k</p>
         <p>
-            {`${timeFromSeconds(times.five.low, false)} - ${timeFromSeconds(times.five.high)}/km`}
+            {`${timeFromSeconds(getSeconds(times.five.low), false)} - ${timeFromSeconds(
+                getSeconds(times.five.high),
+            )}/${units}`}
         </p>
         <p class="name">Overpace</p>
         <p>
-            {`${timeFromSeconds(times.overPace.low, false)} - ${timeFromSeconds(times.overPace.high)}/km`}
+            {`${timeFromSeconds(getSeconds(times.overPace.low), false)} - ${timeFromSeconds(
+                getSeconds(times.overPace.high),
+            )}/${units}`}
         </p>
         <p class="name">Strides</p>
         <p>
-            {`${timeFromSeconds(times.strides.low, false)} - ${timeFromSeconds(times.strides.high)}/km`}
+            {`${timeFromSeconds(getSeconds(times.strides.low), false)} - ${timeFromSeconds(
+                getSeconds(times.strides.high),
+            )}/${units}`}
         </p>
     </div>
 {/if}

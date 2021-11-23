@@ -1,6 +1,8 @@
 import type { Times } from "./types";
+import { MeasurementPreference } from "./types";
 
 const METRES_IN_KM = 1000;
+const METRES_IN_MILE = 1609.34;
 const SECONDS_IN_MINUTE = 60;
 const MINUTES_IN_HOUR = 60;
 
@@ -33,16 +35,39 @@ export function timeFromSeconds(seconds: number, withUnits = true): string {
     return `${Math.trunc(minutes)}:${fractionSeconds} ${withUnits ? "mins" : ""}`;
 }
 
-export function distanceInKm(distanceInMetres: number): string {
-    return `${to2Decimals(distanceInMetres / METRES_IN_KM)} km`;
-}
+const MEASUREMENT_METRES = {
+    [MeasurementPreference.Metric]: METRES_IN_KM,
+    [MeasurementPreference.Imperial]: METRES_IN_MILE,
+};
 
-export function calculateSpeedAndPace(metresPerSecond: number): [string, string] {
-    const metresPerHour = metresPerSecond * SECONDS_IN_MINUTE * MINUTES_IN_HOUR;
-    const kmPerHour = metresPerHour / METRES_IN_KM;
-    const secondsPerKm = METRES_IN_KM / metresPerSecond;
-    return [`${to2Decimals(kmPerHour)} km/hour`, `${timeFromSeconds(secondsPerKm)}/km`];
-}
+export const MEASUREMENT_UNITS = {
+    [MeasurementPreference.Metric]: "km",
+    [MeasurementPreference.Imperial]: "mi",
+};
+
+export const secondsForUnit =
+    (measurementPreference: MeasurementPreference) =>
+    (secondsPerKm: number): number => {
+        return (secondsPerKm / METRES_IN_KM) * MEASUREMENT_METRES[measurementPreference];
+    };
+
+export const distance =
+    (measurementPreference: MeasurementPreference) =>
+    (distanceInMetres: number): string => {
+        const metres = MEASUREMENT_METRES[measurementPreference];
+        const unit = MEASUREMENT_UNITS[measurementPreference];
+        return `${to2Decimals(distanceInMetres / metres)} ${unit}`;
+    };
+
+export const calculateSpeedAndPace =
+    (measurementPreference: MeasurementPreference) =>
+    (metresPerSecond: number): [string, string] => {
+        const metresPerHour = metresPerSecond * SECONDS_IN_MINUTE * MINUTES_IN_HOUR;
+        const kmPerHour = metresPerHour / MEASUREMENT_METRES[measurementPreference];
+        const secondsPerKm = MEASUREMENT_METRES[measurementPreference] / metresPerSecond;
+        const unit = MEASUREMENT_UNITS[measurementPreference];
+        return [`${to2Decimals(kmPerHour)} ${unit}/hour`, `${timeFromSeconds(secondsPerKm)}/${unit}`];
+    };
 
 export function calculatePaces(date5k: number): Times {
     const date5kSecondsPerKm = METRES_IN_KM / date5k;
