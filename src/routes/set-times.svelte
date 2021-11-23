@@ -1,8 +1,9 @@
 <script lang="ts">
     import PaceEntry from "$lib/paceEntry.svelte";
-    import { calculatePacesFromTime, timeFromSeconds, secondsForUnit, MEASUREMENT_UNITS } from "$lib/utils";
+    import { calculatePacesFromTime } from "$lib/utils";
     import { session } from "$app/stores";
     import PaceGrid from "$lib/paceGrid.svelte";
+    import "../app.scss";
 
     let date5k = $session.times ? Math.round($session.times.date5k / 5) : 360;
 
