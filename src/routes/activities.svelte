@@ -1,20 +1,23 @@
 <script context="module" lang="ts">
     import { securePage } from "$lib/authentication";
     import { format } from "date-fns";
-    import { calculateSpeedAndPace, distanceInKm, timeFromSeconds } from "$lib/utils";
+    import { calculateSpeedAndPace, distance, timeFromSeconds } from "$lib/utils";
 
     export const load = securePage(async ({ session, fetch }) => {
         const activitiesResponse = await fetch("https://www.strava.com/api/v3/athlete/activities", {
             headers: { Authorization: `Bearer ${session.token}` },
         });
 
+        const getDistance = distance(session.measurementPreference);
+        const getSpeedAndPace = calculateSpeedAndPace(session.measurementPreference);
+
         const activities = (await activitiesResponse.json()).map(activity => ({
             id: activity.id,
             name: activity.name,
             date: format(new Date(activity.start_date), "dd-MMM-yyyy HH:mm"),
-            distance: distanceInKm(activity.distance),
+            distance: getDistance(activity.distance),
             time: timeFromSeconds(activity.moving_time),
-            pace: calculateSpeedAndPace(activity.average_speed)[1],
+            pace: getSpeedAndPace(activity.average_speed)[1],
         }));
 
         return { props: { activities } };
