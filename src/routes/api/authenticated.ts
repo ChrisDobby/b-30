@@ -20,7 +20,7 @@ export async function get({ query }: ServerRequest): Promise<EndpointOutput> {
         return {
             headers: {
                 "Set-Cookie": getCookies(token),
-                Location: redirect || "/activities",
+                Location: `${redirect || "/activities"}?`,
             },
             status: 302,
         };
