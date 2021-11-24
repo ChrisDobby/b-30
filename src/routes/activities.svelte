@@ -1,25 +1,9 @@
 <script context="module" lang="ts">
     import { securePage } from "$lib/authentication";
-    import { format } from "date-fns";
-    import { calculateSpeedAndPace, distance, timeFromSeconds } from "$lib/utils";
+    import { getActivities } from "$lib/utils";
 
     export const load = securePage(async ({ session, fetch }) => {
-        const activitiesResponse = await fetch("https://www.strava.com/api/v3/athlete/activities", {
-            headers: { Authorization: `Bearer ${session.token}` },
-        });
-
-        const getDistance = distance(session.measurementPreference);
-        const getSpeedAndPace = calculateSpeedAndPace(session.measurementPreference);
-
-        const activities = (await activitiesResponse.json()).map(activity => ({
-            id: activity.id,
-            name: activity.name,
-            date: format(new Date(activity.start_date), "dd-MMM-yyyy HH:mm"),
-            distance: getDistance(activity.distance),
-            time: timeFromSeconds(activity.moving_time),
-            pace: getSpeedAndPace(activity.average_speed)[1],
-        }));
-
+        const activities = await getActivities(fetch, session.token, session.measurementPreference, 1);
         return { props: { activities } };
     });
 </script>
@@ -53,9 +37,39 @@
             settingTimes = false;
         }
     };
+
+    let loadingPage = false;
+    let currentPage = 1;
+    let canLoadMore = true;
+    async function onScroll(args) {
+        if (loadingPage || !canLoadMore) {
+            return;
+        }
+
+        const atBottom = args.target.scrollTop === args.target.scrollHeight - args.target.offsetHeight;
+        if (!atBottom) {
+            return;
+        }
+
+        loadingPage = true;
+        try {
+            const activitiesInNewPage = await getActivities(
+                fetch,
+                $session.token,
+                $session.measurementPreference,
+                currentPage + 1,
+            );
+            console.log(activitiesInNewPage);
+            canLoadMore = activitiesInNewPage.length > 0;
+            activities = [...activities, ...activitiesInNewPage];
+        } finally {
+            currentPage += 1;
+            loadingPage = false;
+        }
+    }
 </script>
 
-<ul class="card-display">
+<ul class="card-display" on:scroll={onScroll}>
     {#each activities as activity}
         <ActivityCard {activity} disabled={settingTimes} onSetTimes={handleSetTimes(activity)} />
     {/each}
@@ -69,5 +83,9 @@
         margin: 0;
         list-style-type: none;
         padding-left: 0;
+        padding-right: 16px;
+        height: 100%;
+        overflow-y: auto;
+        margin-right: -16px;
     }
 </style>
