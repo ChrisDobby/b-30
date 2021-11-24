@@ -1,5 +1,6 @@
-import type { Times } from "./types";
+import type { StravaActivity, Times } from "./types";
 import { MeasurementPreference } from "./types";
+import { format } from "date-fns";
 
 const METRES_IN_KM = 1000;
 const METRES_IN_MILE = 1609.34;
@@ -90,4 +91,27 @@ export function calculatePaces(date5k: number): Times {
 export function calculatePacesFromTime(date5kTime: number): Times {
     const date5kSecondsPerKm = date5kTime / 5;
     return getPaces(date5kTime, date5kSecondsPerKm);
+}
+
+export async function getActivities(
+    fetch: (info: RequestInfo, init?: RequestInit) => Promise<Response>,
+    token: string,
+    measurementPreference: MeasurementPreference,
+    page = 1,
+): Promise<StravaActivity[]> {
+    const activitiesResponse = await fetch(`https://www.strava.com/api/v3/athlete/activities?page=${page}`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const getDistance = distance(measurementPreference);
+    const getSpeedAndPace = calculateSpeedAndPace(measurementPreference);
+
+    return (await activitiesResponse.json()).map(activity => ({
+        id: activity.id,
+        name: activity.name,
+        date: format(new Date(activity.start_date), "dd-MMM-yyyy HH:mm"),
+        distance: getDistance(activity.distance),
+        time: timeFromSeconds(activity.moving_time),
+        pace: getSpeedAndPace(activity.average_speed)[1],
+    }));
 }
