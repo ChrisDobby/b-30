@@ -106,3 +106,5 @@ dist
 .vscode/
 
 .svelte-kit/
+
+static/*.css
