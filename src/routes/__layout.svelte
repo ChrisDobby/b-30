@@ -11,16 +11,12 @@
 </script>
 
 <Header />
-{#if showingBanner}
-    <div class="banner">
-        <Banner open centered mobileStacked>
-            <Label slot="label">{SPONSOR_MESSAGE}</Label>
-            <Button slot="actions" primary target="_blank" href="https://www.justgiving.com/chrisdobby"
-                >Sponsor me!</Button
-            >
-        </Banner>
-    </div>
-{/if}
+<div class="banner">
+    <Banner bind:open={showingBanner} centered mobileStacked>
+        <Label slot="label">{SPONSOR_MESSAGE}</Label>
+        <Button slot="actions" primary target="_blank" href="https://www.justgiving.com/chrisdobby">Sponsor me!</Button>
+    </Banner>
+</div>
 <div class="user-header">
     <UserHeader />
 </div>
