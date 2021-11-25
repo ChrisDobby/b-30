@@ -36,9 +36,14 @@
         display: grid;
         grid-template-columns: 40% 1fr;
         column-gap: 1em;
+        max-width: 1300px;
+        width: calc(100vw - 16px);
+        margin-left: auto;
+        margin-right: auto;
     }
 
     footer {
+        display: none;
         padding: 4px;
         padding-bottom: 16px;
         text-align: center;
@@ -66,6 +71,10 @@
             grid-column: 1;
             height: 100%;
             overflow: hidden;
+        }
+
+        footer {
+            display: block;
         }
     }
 </style>
