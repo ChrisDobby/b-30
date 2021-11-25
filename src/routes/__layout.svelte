@@ -1,11 +1,26 @@
 <script lang="ts">
     import Button from "@smui/button";
+    import Banner, { Label } from "@smui/banner";
     import Header from "$lib/header.svelte";
     import UserHeader from "$lib/userHeader.svelte";
     import UserPanel from "$lib/userPanel.svelte";
+
+    const SPONSOR_MESSAGE =
+        "In April 2022 I am running a half marathon for charity. If you find this app useful please consider sponsoring me.";
+    let showingBanner = true;
 </script>
 
 <Header />
+{#if showingBanner}
+    <div class="banner">
+        <Banner open centered mobileStacked>
+            <Label slot="label">{SPONSOR_MESSAGE}</Label>
+            <Button slot="actions" primary target="_blank" href="https://www.justgiving.com/chrisdobby"
+                >Sponsor me!</Button
+            >
+        </Banner>
+    </div>
+{/if}
 <div class="user-header">
     <UserHeader />
 </div>
@@ -19,8 +34,7 @@
 </main>
 <footer>
     <p>
-        In April 2022 I am running a half marathon for charity. If you find this app useful please consider sponsoring
-        me.
+        {SPONSOR_MESSAGE}
         <Button target="_blank" href="https://www.justgiving.com/chrisdobby" outlined color="primary"
             >Sponsor me!</Button
         >
@@ -75,6 +89,10 @@
 
         footer {
             display: block;
+        }
+
+        .banner {
+            display: none;
         }
     }
 </style>

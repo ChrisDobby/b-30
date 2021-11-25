@@ -443,6 +443,22 @@
   dependencies:
     tslib "^2.1.0"
 
+"@material/banner@^11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@material/banner/-/banner-11.0.0.tgz#0598d6a1aa76ce8c7df754989ebeae9af108588c"
+  integrity sha512-KEhPRqhshA3rAj5e78zddpsbG9ysWo9SHkdRKGcWqqRsoUsDwVmSp3qo+LqdpE2FGATf5ps0ROtEOrudfq6Ukg==
+  dependencies:
+    "@material/base" "^11.0.0"
+    "@material/button" "^11.0.0"
+    "@material/dom" "^11.0.0"
+    "@material/feature-targeting" "^11.0.0"
+    "@material/ripple" "^11.0.0"
+    "@material/rtl" "^11.0.0"
+    "@material/shape" "^11.0.0"
+    "@material/theme" "^11.0.0"
+    "@material/typography" "^11.0.0"
+    tslib "^2.1.0"
+
 "@material/base@^11.0.0":
   version "11.0.0"
   resolved "https://registry.yarnpkg.com/@material/base/-/base-11.0.0.tgz#e8819a10946d8d7755d7111071adbe59ec998bdf"
@@ -797,6 +813,15 @@
   dependencies:
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
+
+"@smui/banner@^5.0.0":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@smui/banner/-/banner-5.0.1.tgz#edbaba00e59c37b79532dd3903c99e266d0114b9"
+  integrity sha512-S831DYvdFmaV0XV467Jxz0zJc9/jtJ1cIKsQBv8HZKWB8bObjciTxndstNT2Nj++pmhffk9Lc9royFcZGogtzg==
+  dependencies:
+    "@material/banner" "^11.0.0"
+    "@smui/common" "^5.0.1"
+    svelte2tsx "^0.4.6"
 
 "@smui/button@^5.0.0":
   version "5.0.0"
