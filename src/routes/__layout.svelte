@@ -50,12 +50,12 @@
     }
     .main-slot {
         grid-column: 1 / 3;
+        height: 100%;
+        overflow-y: hidden;
     }
     @media (min-width: 1000px) {
         .main-slot {
             grid-column: 2;
-            height: 100%;
-            overflow-y: hidden;
         }
         .user-header {
             display: none;
