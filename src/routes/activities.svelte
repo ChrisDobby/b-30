@@ -86,6 +86,5 @@
         padding-right: 16px;
         height: 100%;
         overflow-y: auto;
-        margin-right: -16px;
     }
 </style>
