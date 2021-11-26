@@ -4,17 +4,34 @@
     import Header from "$lib/header.svelte";
     import UserHeader from "$lib/userHeader.svelte";
     import UserPanel from "$lib/userPanel.svelte";
+    import { onMount } from "svelte";
 
     const SPONSOR_MESSAGE =
         "In April 2022 I am running a half marathon for charity. If you find this app useful please consider sponsoring me.";
-    let showingBanner = true;
+
+    let showBanner = false;
+    onMount(() => {
+        const showBannerEndDateStored = localStorage.getItem("showBannerEndDate");
+        const showBannerEndDate = showBannerEndDateStored ? new Date(showBannerEndDateStored) : null;
+        showBanner = !showBannerEndDate || showBannerEndDate < new Date();
+    });
+
+    const handleCloseBanner = () => {
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 7);
+        localStorage.setItem("showBannerEndDate", endDate.toISOString());
+        showBanner = false;
+    };
 </script>
 
 <Header />
 <div class="banner">
-    <Banner bind:open={showingBanner} centered mobileStacked>
+    <Banner bind:open={showBanner} centered mobileStacked>
         <Label slot="label">{SPONSOR_MESSAGE}</Label>
-        <Button slot="actions" primary target="_blank" href="https://www.justgiving.com/chrisdobby">Sponsor me!</Button>
+        <svelte:fragment slot="actions">
+            <Button primary target="_blank" href="https://www.justgiving.com/chrisdobby">Sponsor me!</Button>
+            <Button primary on:click={handleCloseBanner}>Close</Button>
+        </svelte:fragment>
     </Banner>
 </div>
 <div class="user-header">
