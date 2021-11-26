@@ -5,15 +5,18 @@
     import UserHeader from "$lib/userHeader.svelte";
     import UserPanel from "$lib/userPanel.svelte";
     import { onMount } from "svelte";
+    import { session } from "$app/stores";
 
     const SPONSOR_MESSAGE =
         "In April 2022 I am running a half marathon for charity. If you find this app useful please consider sponsoring me.";
 
     let showBanner = false;
     onMount(() => {
-        const showBannerEndDateStored = localStorage.getItem("showBannerEndDate");
-        const showBannerEndDate = showBannerEndDateStored ? new Date(showBannerEndDateStored) : null;
-        showBanner = !showBannerEndDate || showBannerEndDate < new Date();
+        if ($session.user) {
+            const showBannerEndDateStored = localStorage.getItem("showBannerEndDate");
+            const showBannerEndDate = showBannerEndDateStored ? new Date(showBannerEndDateStored) : null;
+            showBanner = !showBannerEndDate || showBannerEndDate < new Date();
+        }
     });
 
     const handleCloseBanner = () => {
@@ -45,14 +48,16 @@
         <slot />
     </div>
 </main>
-<footer>
-    <p>
-        {SPONSOR_MESSAGE}
-        <Button target="_blank" href="https://www.justgiving.com/chrisdobby" outlined color="primary"
-            >Sponsor me!</Button
-        >
-    </p>
-</footer>
+{#if $session.user}
+    <footer>
+        <p>
+            {SPONSOR_MESSAGE}
+            <Button target="_blank" href="https://www.justgiving.com/chrisdobby" outlined color="primary"
+                >Sponsor me!</Button
+            >
+        </p>
+    </footer>
+{/if}
 
 <style>
     main {
