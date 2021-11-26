@@ -5,15 +5,18 @@
     import UserHeader from "$lib/userHeader.svelte";
     import UserPanel from "$lib/userPanel.svelte";
     import { onMount } from "svelte";
+    import { session } from "$app/stores";
 
     const SPONSOR_MESSAGE =
         "In April 2022 I am running a half marathon for charity. If you find this app useful please consider sponsoring me.";
 
     let showBanner = false;
     onMount(() => {
-        const showBannerEndDateStored = localStorage.getItem("showBannerEndDate");
-        const showBannerEndDate = showBannerEndDateStored ? new Date(showBannerEndDateStored) : null;
-        showBanner = !showBannerEndDate || showBannerEndDate < new Date();
+        if ($session.user) {
+            const showBannerEndDateStored = localStorage.getItem("showBannerEndDate");
+            const showBannerEndDate = showBannerEndDateStored ? new Date(showBannerEndDateStored) : null;
+            showBanner = !showBannerEndDate || showBannerEndDate < new Date();
+        }
     });
 
     const handleCloseBanner = () => {
@@ -29,7 +32,9 @@
     <Banner bind:open={showBanner} centered mobileStacked>
         <Label slot="label">{SPONSOR_MESSAGE}</Label>
         <svelte:fragment slot="actions">
-            <Button primary target="_blank" href="https://www.justgiving.com/chrisdobby">Sponsor me!</Button>
+            <Button primary target="_blank" href="https://www.justgiving.com/chrisdobby" rel="noreferrer"
+                >Sponsor me!</Button
+            >
             <Button primary on:click={handleCloseBanner}>Close</Button>
         </svelte:fragment>
     </Banner>
@@ -37,22 +42,29 @@
 <div class="user-header">
     <UserHeader />
 </div>
-<main>
+<main class={!$session.user ? "logged-out" : ""}>
     <div class="user-panel">
         <UserPanel />
     </div>
+
     <div class="main-slot">
         <slot />
     </div>
 </main>
-<footer>
-    <p>
-        {SPONSOR_MESSAGE}
-        <Button target="_blank" href="https://www.justgiving.com/chrisdobby" outlined color="primary"
-            >Sponsor me!</Button
-        >
-    </p>
-</footer>
+{#if $session.user}
+    <footer>
+        <p>
+            {SPONSOR_MESSAGE}
+            <Button
+                target="_blank"
+                href="https://www.justgiving.com/chrisdobby"
+                rel="noreferrer"
+                outlined
+                color="primary">Sponsor me!</Button
+            >
+        </p>
+    </footer>
+{/if}
 
 <style>
     main {
@@ -67,6 +79,10 @@
         width: calc(100vw - 16px);
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .logged-out {
+        grid-template-columns: 0 1fr;
     }
 
     footer {

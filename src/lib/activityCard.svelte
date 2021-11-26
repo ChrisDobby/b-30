@@ -22,7 +22,7 @@
                 <Button on:click={onSetTimes} {disabled}>Set times</Button>
                 <Button
                     href={`https://www.strava.com/activities/${activity.id}`}
-                    target="__blank"
+                    target="_blank"
                     rel="noreferrer"
                     {disabled}>View in Strava</Button
                 >
