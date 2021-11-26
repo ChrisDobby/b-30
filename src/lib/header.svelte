@@ -12,7 +12,9 @@
 <TopAppBar variant="static" color={"primary"}>
     <Row>
         <Section>
-            <IconButton on:click={() => menu.setOpen(true)} class="material-icons">menu</IconButton>
+            <span class="menu-button">
+                <IconButton on:click={() => menu.setOpen(true)} class="material-icons">menu</IconButton>
+            </span>
             <Menu bind:this={menu}>
                 <List>
                     {#if $session.user}
@@ -47,3 +49,11 @@
         </Section>
     </Row>
 </TopAppBar>
+
+<style>
+    @media (min-width: 1000px) {
+        .menu-button {
+            display: none;
+        }
+    }
+</style>
