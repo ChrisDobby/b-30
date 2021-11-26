@@ -32,7 +32,9 @@
     <Banner bind:open={showBanner} centered mobileStacked>
         <Label slot="label">{SPONSOR_MESSAGE}</Label>
         <svelte:fragment slot="actions">
-            <Button primary target="_blank" href="https://www.justgiving.com/chrisdobby">Sponsor me!</Button>
+            <Button primary target="_blank" href="https://www.justgiving.com/chrisdobby" rel="noreferrer"
+                >Sponsor me!</Button
+            >
             <Button primary on:click={handleCloseBanner}>Close</Button>
         </svelte:fragment>
     </Banner>
@@ -40,10 +42,11 @@
 <div class="user-header">
     <UserHeader />
 </div>
-<main>
+<main class={!$session.user ? "logged-out" : ""}>
     <div class="user-panel">
         <UserPanel />
     </div>
+
     <div class="main-slot">
         <slot />
     </div>
@@ -52,8 +55,12 @@
     <footer>
         <p>
             {SPONSOR_MESSAGE}
-            <Button target="_blank" href="https://www.justgiving.com/chrisdobby" outlined color="primary"
-                >Sponsor me!</Button
+            <Button
+                target="_blank"
+                href="https://www.justgiving.com/chrisdobby"
+                rel="noreferrer"
+                outlined
+                color="primary">Sponsor me!</Button
             >
         </p>
     </footer>
@@ -72,6 +79,10 @@
         width: calc(100vw - 16px);
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .logged-out {
+        grid-template-columns: 0 1fr;
     }
 
     footer {

@@ -12,15 +12,35 @@
 </script>
 
 <script lang="ts">
+    import Button from "@smui/button";
+
     import "../app.scss";
 </script>
 
-<div class="coming-soon">
-    <h4>Coming soon!</h4>
+<div class="home-page">
+    <h5>Analyse your Strava runs based on the</h5>
+    <h5 class="brightside-link">
+        <a href="https://www.brightsidept.com/breaking-30-5k-mastery" target="_blank" rel="noreferrer"
+            >Brightside PT breaking 30 for 5k program
+        </a>
+    </h5>
+    <p>To use the application you must login to your Strava account</p>
+    <Button href="/activities">Login to Strava</Button>
+    <p class="source">If you're interested the source code for this application can be found here</p>
+    <a href="https://github.com/chrisdobby/b-30" target="_blank" rel="noreferrer">https://github.com/chrisdobby/b-30</a>
 </div>
 
 <style>
-    .coming-soon {
+    .home-page {
         text-align: center;
+        padding-right: 16px;
+    }
+
+    .brightside-link {
+        margin-top: -1em;
+    }
+
+    .source {
+        margin-top: 4em;
     }
 </style>
