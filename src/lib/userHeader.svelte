@@ -3,6 +3,7 @@
     import { session } from "$app/stores";
     import { timeFromSeconds, calculateSpeedAndPace } from "$lib/utils";
     import PaceGrid from "$lib/paceGrid.svelte";
+    import { slide } from "svelte/transition";
 
     const getSpeedAndPace = calculateSpeedAndPace($session.measurementPreference);
 
@@ -34,7 +35,7 @@
             {/if}
         </div>
         {#if showingPaces && times}
-            <div class="times-detail">
+            <div class="times-detail" transition:slide>
                 <PaceGrid {times} measurementPreference={$session.measurementPreference} />
             </div>
         {/if}

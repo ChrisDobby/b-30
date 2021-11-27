@@ -2,13 +2,14 @@
     import type { StravaActivity } from "$lib/types";
     import Card, { Content, Actions, ActionButtons } from "@smui/card";
     import Button from "@smui/button";
+    import { fade } from "svelte/transition";
 
     export let activity: StravaActivity;
     export let disabled: boolean;
     export let onSetTimes: () => void;
 </script>
 
-<li class="card-container">
+<li class="card-container" in:fade>
     <Card
         ><Content
             ><div class="activity-name">{activity.name}</div>
