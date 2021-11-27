@@ -17,7 +17,7 @@
 <script lang="ts">
     import { ApiResult, StravaActivity } from "$lib/types";
     import ActivityCard from "$lib/activityCard.svelte";
-    import Snackbar, { Label } from "@smui/snackbar";
+    import Snackbar, { Label, SnackbarComponentDev } from "@smui/snackbar";
     import Paper, { Title, Content } from "@smui/paper";
     import { session } from "$app/stores";
     import "../app.scss";
@@ -25,23 +25,23 @@
     export let activities: StravaActivity[] = [];
     export let loadingError = "";
 
+    let errorSnackbar: SnackbarComponentDev;
+
     let settingTimes: boolean;
-    let settingTimesError: boolean;
     const f = resilientFetch(fetch);
 
     const handleSetTimes = (activity: StravaActivity) => async () => {
         settingTimes = true;
-        settingTimesError = false;
         try {
             const response = await f(`/api/setTimes/${activity.id}`);
             if (!response.ok) {
-                settingTimesError = true;
+                errorSnackbar.open();
             } else {
                 const times = await response.json();
                 $session.times = times;
             }
         } catch (e) {
-            settingTimesError = true;
+            errorSnackbar.open();
         } finally {
             settingTimes = false;
         }
@@ -103,9 +103,7 @@
     </ul>
 {/if}
 
-{#if settingTimesError}
-    <Snackbar><Label>There was an error setting the times. Please try again.</Label></Snackbar>
-{/if}
+<Snackbar bind:this={errorSnackbar}><Label>There was an error setting the times. Please try again.</Label></Snackbar>
 
 <style>
     .card-display {

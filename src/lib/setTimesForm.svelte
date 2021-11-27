@@ -3,7 +3,7 @@
     import { calculatePacesFromTime } from "$lib/utils";
     import { session } from "$app/stores";
     import PaceGrid from "$lib/paceGrid.svelte";
-    import Snackbar, { Label } from "@smui/snackbar";
+    import Snackbar, { Label, SnackbarComponentDev } from "@smui/snackbar";
     import Button from "@smui/button";
     import resilientFetch from "$lib/resilientFetch";
 
@@ -14,7 +14,7 @@
     $: times = calculatePacesFromTime(date5k * 5);
 
     let settingTimes: boolean;
-    let settingTimesError: boolean;
+    let errorSnackbar: SnackbarComponentDev;
 
     export let onChange: () => void;
     export let onCancel: () => void;
@@ -22,7 +22,6 @@
     const f = resilientFetch(fetch);
     async function handleSubmit() {
         settingTimes = true;
-        settingTimesError = false;
         try {
             const response = await f("/api/setTimes", {
                 method: "POST",
@@ -37,11 +36,11 @@
                 $session.times = times;
                 onChange();
             } else {
-                settingTimesError = true;
+                errorSnackbar.open();
                 settingTimes = false;
             }
         } catch (e) {
-            settingTimesError = true;
+            errorSnackbar.open();
             settingTimes = false;
         }
     }
@@ -63,9 +62,7 @@
     </fieldset>
 </form>
 
-{#if settingTimesError}
-    <Snackbar><Label>There was an error setting the times. Please try again.</Label></Snackbar>
-{/if}
+<Snackbar bind:this={errorSnackbar}><Label>There was an error setting the times. Please try again.</Label></Snackbar>
 
 <style>
     fieldset {
