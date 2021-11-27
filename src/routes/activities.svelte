@@ -1,9 +1,11 @@
 <script context="module" lang="ts">
     import { securePage } from "$lib/authentication";
     import { getActivities } from "$lib/utils";
+    import resilientFetch from "$lib/resilientFetch";
 
     export const load = securePage(async ({ session, fetch }) => {
-        const activities = await getActivities(fetch, session.token, session.measurementPreference, 1);
+        const f = resilientFetch(fetch);
+        const activities = await getActivities(f, session.token, session.measurementPreference, 1);
         return { props: { activities } };
     });
 </script>
@@ -23,8 +25,9 @@
     const handleSetTimes = (activity: StravaActivity) => async () => {
         settingTimes = true;
         settingTimesError = false;
+        const f = resilientFetch(fetch);
         try {
-            const response = await fetch(`/api/setTimes/${activity.id}`);
+            const response = await f(`/api/setTimes/${activity.id}`);
             if (!response.ok) {
                 settingTimesError = true;
             } else {

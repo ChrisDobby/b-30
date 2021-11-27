@@ -5,6 +5,7 @@
     import PaceGrid from "$lib/paceGrid.svelte";
     import Snackbar, { Label } from "@smui/snackbar";
     import Button from "@smui/button";
+    import resilientFetch from "$lib/resilientFetch";
 
     import "../app.scss";
 
@@ -18,11 +19,12 @@
     export let onChange: () => void;
     export let onCancel: () => void;
 
+    const f = resilientFetch(fetch);
     async function handleSubmit() {
         settingTimes = true;
         settingTimesError = false;
         try {
-            const response = await fetch("/api/setTimes", {
+            const response = await f("/api/setTimes", {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${$session.token}`,
@@ -34,7 +36,6 @@
             if (response.ok) {
                 $session.times = times;
                 onChange();
-                // goto("/activities");
             } else {
                 settingTimesError = true;
                 settingTimes = false;

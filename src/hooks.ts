@@ -3,6 +3,7 @@ import type { Auth, AuthenticatedAthlete, MeasurementPreference, Session, User }
 import withStore from "$lib/withStore";
 import type { Request, Handle } from "@sveltejs/kit";
 import cookie from "cookie";
+import resilientFetch from "$lib/resilientFetch";
 
 function createUserFromAuth({ id, firstname, lastname, profile }: AuthenticatedAthlete): User {
     return {
@@ -35,6 +36,7 @@ export const handle: Handle = async ({ request, resolve }) => {
     return response;
 };
 
+const f = resilientFetch(fetch);
 export const getSession = withStore(async (request: Request, { store }): Promise<Session> => {
     if (!request.locals.user) {
         return {};
@@ -42,7 +44,7 @@ export const getSession = withStore(async (request: Request, { store }): Promise
 
     const [times, athleteResponse] = await Promise.all([
         store.getTimes(request.locals.user.id),
-        fetch("https://www.strava.com/api/v3/athlete", {
+        f("https://www.strava.com/api/v3/athlete", {
             headers: { Authorization: `Bearer ${request.locals.token}` },
         }),
     ]);

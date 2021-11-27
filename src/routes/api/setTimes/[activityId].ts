@@ -4,6 +4,9 @@ import withStore from "$lib/withStore";
 import type { Store } from "$lib/types";
 import type { EndpointOutput } from "@sveltejs/kit";
 import type { ServerRequest } from "@sveltejs/kit/types/hooks";
+import resilientFetch from "$lib/resilientFetch";
+
+const f = resilientFetch(fetch);
 
 type StoreArgs = { store: Store };
 export const get = withStore(
@@ -12,7 +15,7 @@ export const get = withStore(
             const { activityId } = params;
 
             try {
-                const activityResponse = await fetch(`https://www.strava.com/api/v3/activities/${activityId}`, {
+                const activityResponse = await f(`https://www.strava.com/api/v3/activities/${activityId}`, {
                     headers: { Authorization: `Bearer ${locals.token}` },
                 });
 
