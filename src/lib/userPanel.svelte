@@ -5,6 +5,7 @@
     import PaceGrid from "$lib/paceGrid.svelte";
     import Button from "@smui/button";
     import SetTimesForm from "$lib/setTimesForm.svelte";
+    import { slide } from "svelte/transition";
 
     const getSpeedAndPace = calculateSpeedAndPace($session.measurementPreference);
 
@@ -25,27 +26,31 @@
         <div class="header">
             <div class="user-name">{`${user.firstName} ${user.lastName}`}</div>
         </div>
-        <div class={`times-header ${settingTimes ? "disabled" : ""}`}>
-            {#if times}
-                <div class="five-k-description">
-                    {`Date 5k time: ${timeFromSeconds(times.date5k)} at ${getSpeedAndPace(5000 / times.date5k)[1]}`}
-                </div>
-            {:else if $session.timesError}
-                <p class="small">Something went wrong getting your paces. Please refresh to try again.</p>
-            {:else}
-                <p class="small">You have no paces set</p>
-            {/if}
-        </div>
-        {#if times}
-            <div class={`times-detail ${settingTimes ? "disabled" : ""}`}>
-                <PaceGrid {times} measurementPreference={$session.measurementPreference} />
+        {#if !settingTimes}
+            <div class="times-header" in:slide>
+                {#if times}
+                    <div class="five-k-description">
+                        {`Date 5k time: ${timeFromSeconds(times.date5k)} at ${getSpeedAndPace(5000 / times.date5k)[1]}`}
+                    </div>
+                {:else if $session.timesError}
+                    <p class="small">Something went wrong getting your paces. Please refresh to try again.</p>
+                {:else}
+                    <p class="small">You have no paces set</p>
+                {/if}
             </div>
         {/if}
-        <Button disabled={settingTimes} on:click={() => (settingTimes = true)}
-            >{times ? "Update paces" : "Set paces"}</Button
-        >
+        {#if times && !settingTimes}
+            <div class="times-detail" in:slide>
+                <PaceGrid {times} measurementPreference={$session.measurementPreference} />
+            </div>
+            <Button disabled={settingTimes} on:click={() => (settingTimes = true)}
+                >{times ? "Update paces" : "Set paces"}</Button
+            >
+        {/if}
         {#if settingTimes}
-            <SetTimesForm onCancel={onSettingComplete} onChange={onSettingComplete} />
+            <div in:slide>
+                <SetTimesForm onCancel={onSettingComplete} onChange={onSettingComplete} />
+            </div>
         {/if}
     </div>
 {/if}
@@ -67,10 +72,5 @@
         height: 5em;
         border-radius: 50%;
         margin-right: 1em;
-    }
-
-    .times-detail.disabled,
-    .times-header.disabled {
-        opacity: 0.2;
     }
 </style>

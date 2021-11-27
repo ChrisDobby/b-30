@@ -2,6 +2,7 @@
     import { goto } from "$app/navigation";
     import SetTimesForm from "$lib/setTimesForm.svelte";
     import { session } from "$app/stores";
+    import { fade } from "svelte/transition";
 
     import "../app.scss";
 
@@ -13,4 +14,6 @@
     <title>Set pace for {$session.user.firstName} {$session.user.lastName}</title>
 </svelte:head>
 
-<SetTimesForm {onChange} {onCancel} />
+<div in:fade>
+    <SetTimesForm {onChange} {onCancel} />
+</div>
