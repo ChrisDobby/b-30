@@ -90,7 +90,7 @@
     <div class="loading-error">
         <Paper color="primary"
             ><Title>Loading error</Title>
-            <Content>There was an error loading your activities from Strava. Please try again.</Content></Paper
+            <Content>Something went wrong loading your activities from Strava. Please try again.</Content></Paper
         >
     </div>
 {/if}
@@ -103,7 +103,7 @@
     </ul>
 {/if}
 
-<Snackbar bind:this={errorSnackbar}><Label>There was an error setting the times. Please try again.</Label></Snackbar>
+<Snackbar bind:this={errorSnackbar}><Label>Something went wrong setting the times. Please try again.</Label></Snackbar>
 
 <style>
     .card-display {

@@ -62,7 +62,7 @@
     </fieldset>
 </form>
 
-<Snackbar bind:this={errorSnackbar}><Label>There was an error setting the times. Please try again.</Label></Snackbar>
+<Snackbar bind:this={errorSnackbar}><Label>Something went wrong setting the times. Please try again.</Label></Snackbar>
 
 <style>
     fieldset {

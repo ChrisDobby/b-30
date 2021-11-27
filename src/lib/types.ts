@@ -29,6 +29,7 @@ export type Session = {
     token?: string;
     times?: Times;
     measurementPreference?: MeasurementPreference;
+    timesError?: boolean;
 };
 
 export type AuthenticatedAthlete = {
