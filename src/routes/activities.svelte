@@ -55,7 +55,7 @@
             return;
         }
 
-        const atBottom = args.target.scrollTop === args.target.scrollHeight - args.target.offsetHeight - 5;
+        const atBottom = args.target.scrollTop >= args.target.scrollHeight - args.target.offsetHeight - 5;
         if (!atBottom) {
             return;
         }
