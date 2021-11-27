@@ -9,7 +9,7 @@ import resilientFetch from "$lib/resilientFetch";
 const f = resilientFetch(fetch);
 
 type StoreArgs = { store: Store };
-export const get = withStore(
+export const post = withStore(
     secureApi(
         async ({ params, locals }: ServerRequest, { store: { setTimes } }: StoreArgs): Promise<EndpointOutput> => {
             const { activityId } = params;

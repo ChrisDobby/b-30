@@ -33,7 +33,7 @@
     const handleSetTimes = (activity: StravaActivity) => async () => {
         settingTimes = true;
         try {
-            const response = await f(`/api/setTimes/${activity.id}`);
+            const response = await f(`/api/setTimes/${activity.id}`, { method: "POST" });
             if (!response.ok) {
                 errorSnackbar.open();
             } else {
