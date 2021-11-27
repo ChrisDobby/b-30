@@ -1,8 +1,10 @@
 import { getCookies, retrieveToken } from "$lib/authentication";
-import type { Auth, AuthenticatedAthlete, MeasurementPreference, Session, User } from "$lib/types";
+import type { Auth, AuthenticatedAthlete, Session, User } from "$lib/types";
+import { MeasurementPreference } from "$lib/types";
 import withStore from "$lib/withStore";
 import type { Request, Handle } from "@sveltejs/kit";
 import cookie from "cookie";
+import resilientFetch from "$lib/resilientFetch";
 
 function createUserFromAuth({ id, firstname, lastname, profile }: AuthenticatedAthlete): User {
     return {
@@ -35,28 +37,33 @@ export const handle: Handle = async ({ request, resolve }) => {
     return response;
 };
 
+const f = resilientFetch(fetch);
 export const getSession = withStore(async (request: Request, { store }): Promise<Session> => {
     if (!request.locals.user) {
         return {};
     }
 
-    const [times, athleteResponse] = await Promise.all([
-        store.getTimes(request.locals.user.id),
-        fetch("https://www.strava.com/api/v3/athlete", {
-            headers: { Authorization: `Bearer ${request.locals.token}` },
-        }),
-    ]);
+    let measurementPreference = MeasurementPreference.Metric;
+    try {
+        const [times, athleteResponse] = await Promise.all([
+            store.getTimes(request.locals.user.id),
+            f("https://www.strava.com/api/v3/athlete", {
+                headers: { Authorization: `Bearer ${request.locals.token}` },
+            }),
+        ]);
 
-    let measurementPreference: MeasurementPreference | null = null;
-    if (athleteResponse.ok) {
-        const athlete = await athleteResponse.json();
-        measurementPreference = athlete.measurement_preference;
+        if (athleteResponse.ok) {
+            const athlete = await athleteResponse.json();
+            measurementPreference = athlete.measurement_preference;
+        }
+
+        return {
+            user: request.locals.user,
+            token: request.locals.token,
+            times,
+            measurementPreference,
+        };
+    } catch (e) {
+        return { user: request.locals.user, token: request.locals.token, measurementPreference, timesError: true };
     }
-
-    return {
-        user: request.locals.user,
-        token: request.locals.token,
-        times,
-        measurementPreference,
-    };
 });

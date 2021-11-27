@@ -30,6 +30,8 @@
                 <div class="five-k-description">
                     {`Date 5k time: ${timeFromSeconds(times.date5k)} at ${getSpeedAndPace(5000 / times.date5k)[1]}`}
                 </div>
+            {:else if $session.timesError}
+                <p class="small">Something went wrong getting your paces. Please refresh to try again.</p>
             {:else}
                 <p class="small">You have no paces set</p>
             {/if}

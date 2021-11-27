@@ -1,38 +1,47 @@
 <script context="module" lang="ts">
     import { securePage } from "$lib/authentication";
     import { getActivities } from "$lib/utils";
+    import resilientFetch from "$lib/resilientFetch";
 
     export const load = securePage(async ({ session, fetch }) => {
-        const activities = await getActivities(fetch, session.token, session.measurementPreference, 1);
-        return { props: { activities } };
+        const f = resilientFetch(fetch);
+        const activitiesResult = await getActivities(f, session.token, session.measurementPreference, 1);
+        if (activitiesResult.result === ApiResult.Error) {
+            return { props: { activities: [], loadingError: activitiesResult.error } };
+        }
+
+        return { props: { activities: activitiesResult.activities, loadingError: "" } };
     });
 </script>
 
 <script lang="ts">
-    import type { StravaActivity } from "$lib/types";
+    import { ApiResult, StravaActivity } from "$lib/types";
     import ActivityCard from "$lib/activityCard.svelte";
-    import Snackbar, { Label } from "@smui/snackbar";
+    import Snackbar, { Label, SnackbarComponentDev } from "@smui/snackbar";
+    import Paper, { Title, Content } from "@smui/paper";
     import { session } from "$app/stores";
     import "../app.scss";
 
-    export let activities: StravaActivity[];
+    export let activities: StravaActivity[] = [];
+    export let loadingError = "";
+
+    let errorSnackbar: SnackbarComponentDev;
 
     let settingTimes: boolean;
-    let settingTimesError: boolean;
+    const f = resilientFetch(fetch);
 
     const handleSetTimes = (activity: StravaActivity) => async () => {
         settingTimes = true;
-        settingTimesError = false;
         try {
-            const response = await fetch(`/api/setTimes/${activity.id}`);
+            const response = await f(`/api/setTimes/${activity.id}`, { method: "POST" });
             if (!response.ok) {
-                settingTimesError = true;
+                errorSnackbar.open();
             } else {
                 const times = await response.json();
                 $session.times = times;
             }
         } catch (e) {
-            settingTimesError = true;
+            errorSnackbar.open();
         } finally {
             settingTimes = false;
         }
@@ -52,14 +61,22 @@
         }
 
         loadingPage = true;
+        loadingError = "";
         try {
-            const activitiesInNewPage = await getActivities(
+            const getActivitiesResult = await getActivities(
                 fetch,
                 $session.token,
                 $session.measurementPreference,
                 currentPage + 1,
             );
-            console.log(activitiesInNewPage);
+
+            if (getActivitiesResult.result === ApiResult.Error) {
+                canLoadMore = false;
+                loadingError = getActivitiesResult.error;
+                return;
+            }
+
+            const activitiesInNewPage = getActivitiesResult.activities;
             canLoadMore = activitiesInNewPage.length > 0;
             activities = [...activities, ...activitiesInNewPage];
         } finally {
@@ -69,14 +86,24 @@
     }
 </script>
 
-<ul class="card-display" on:scroll={onScroll}>
-    {#each activities as activity}
-        <ActivityCard {activity} disabled={settingTimes} onSetTimes={handleSetTimes(activity)} />
-    {/each}
-</ul>
-{#if settingTimesError}
-    <Snackbar><Label>There was an error setting the times. Please try again.</Label></Snackbar>
+{#if loadingError}
+    <div class="loading-error">
+        <Paper color="primary"
+            ><Title>Loading error</Title>
+            <Content>Something went wrong loading your activities from Strava. Please try again.</Content></Paper
+        >
+    </div>
 {/if}
+
+{#if activities.length}
+    <ul class="card-display" on:scroll={onScroll}>
+        {#each activities as activity}
+            <ActivityCard {activity} disabled={settingTimes} onSetTimes={handleSetTimes(activity)} />
+        {/each}
+    </ul>
+{/if}
+
+<Snackbar bind:this={errorSnackbar}><Label>Something went wrong setting the times. Please try again.</Label></Snackbar>
 
 <style>
     .card-display {
@@ -86,5 +113,9 @@
         padding-right: 16px;
         height: 100%;
         overflow-y: auto;
+    }
+
+    .loading-error {
+        margin-right: 16px;
     }
 </style>

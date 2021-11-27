@@ -1,6 +1,7 @@
 import type { LoadInput, Load, Page } from "@sveltejs/kit";
 import type { Auth, Api } from "$lib/types";
 import cookie from "cookie";
+import resilientFetch from "$lib/resilientFetch";
 
 const STRAVA_CLIENT_ID = process.env.STRAVA_CLIENT_ID || "";
 const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET || "";
@@ -13,13 +14,14 @@ type RetrieveTokenArgs = {
     refreshToken?: string;
 };
 
+const f = resilientFetch(fetch);
 export async function retrieveToken({ code, refreshToken, scope }: RetrieveTokenArgs): Promise<Auth> {
     const tokenData =
         typeof refreshToken !== "undefined"
             ? `grant_type=refresh_token&refresh_token=${refreshToken}`
             : `grant_type=authorization_code&code=${code}`;
 
-    const authResponse = await fetch(STRAVA_TOKEN_URL, {
+    const authResponse = await f(STRAVA_TOKEN_URL, {
         method: "POST",
         body: `${tokenData}&client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}`,
         headers: { "Content-Type": "application/x-www-form-urlencoded" },

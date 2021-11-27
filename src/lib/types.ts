@@ -29,6 +29,7 @@ export type Session = {
     token?: string;
     times?: Times;
     measurementPreference?: MeasurementPreference;
+    timesError?: boolean;
 };
 
 export type AuthenticatedAthlete = {
@@ -60,3 +61,10 @@ export type Store = {
 };
 
 export type Api = (request: ServerRequest, args?: any) => Promise<EndpointOutput>;
+
+export enum ApiResult {
+    Success = "success",
+    Error = "error",
+}
+
+export type ApiError = { result: ApiResult.Error; error?: string };
