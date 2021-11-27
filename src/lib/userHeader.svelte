@@ -53,7 +53,6 @@
         font-size: 1em;
         text-align: left;
         color: var(--mdc-theme-on-secondary, #fff);
-        cursor: pointer;
         width: 100%;
     }
 
