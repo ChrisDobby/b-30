@@ -1,4 +1,5 @@
-import type { StravaActivity, Times } from "./types";
+import type { ApiError, StravaActivity, Times } from "./types";
+import { ApiResult } from "./types";
 import { MeasurementPreference } from "./types";
 import { format } from "date-fns";
 
@@ -93,12 +94,14 @@ export function calculatePacesFromTime(date5kTime: number): Times {
     return getPaces(date5kTime, date5kSecondsPerKm);
 }
 
+type GetActivitiesSuccess = { result: ApiResult.Success; activities: StravaActivity[] };
+type GetActivitiesResult = GetActivitiesSuccess | ApiError;
 export async function getActivities(
     fetch: (info: RequestInfo, init?: RequestInit) => Promise<Response>,
     token: string,
     measurementPreference: MeasurementPreference,
     page = 1,
-): Promise<StravaActivity[]> {
+): Promise<GetActivitiesResult> {
     const activitiesResponse = await fetch(`https://www.strava.com/api/v3/athlete/activities?page=${page}`, {
         headers: { Authorization: `Bearer ${token}` },
     });
@@ -106,12 +109,19 @@ export async function getActivities(
     const getDistance = distance(measurementPreference);
     const getSpeedAndPace = calculateSpeedAndPace(measurementPreference);
 
-    return (await activitiesResponse.json()).map(activity => ({
-        id: activity.id,
-        name: activity.name,
-        date: format(new Date(activity.start_date), "dd-MMM-yyyy HH:mm"),
-        distance: getDistance(activity.distance),
-        time: timeFromSeconds(activity.moving_time),
-        pace: getSpeedAndPace(activity.average_speed)[1],
-    }));
+    if (!activitiesResponse.ok) {
+        return { result: ApiResult.Error, error: activitiesResponse.statusText };
+    }
+
+    return {
+        result: ApiResult.Success,
+        activities: (await activitiesResponse.json()).map(activity => ({
+            id: activity.id,
+            name: activity.name,
+            date: format(new Date(activity.start_date), "dd-MMM-yyyy HH:mm"),
+            distance: getDistance(activity.distance),
+            time: timeFromSeconds(activity.moving_time),
+            pace: getSpeedAndPace(activity.average_speed)[1],
+        })),
+    };
 }

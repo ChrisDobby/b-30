@@ -5,27 +5,33 @@
 
     export const load = securePage(async ({ session, fetch }) => {
         const f = resilientFetch(fetch);
-        const activities = await getActivities(f, session.token, session.measurementPreference, 1);
-        return { props: { activities } };
+        const activitiesResult = await getActivities(f, session.token, session.measurementPreference, 1);
+        if (activitiesResult.result === ApiResult.Error) {
+            return { props: { activities: [], loadingError: activitiesResult.error } };
+        }
+
+        return { props: { activities: activitiesResult.activities, loadingError: "" } };
     });
 </script>
 
 <script lang="ts">
-    import type { StravaActivity } from "$lib/types";
+    import { ApiResult, StravaActivity } from "$lib/types";
     import ActivityCard from "$lib/activityCard.svelte";
     import Snackbar, { Label } from "@smui/snackbar";
+    import Paper, { Title, Content } from "@smui/paper";
     import { session } from "$app/stores";
     import "../app.scss";
 
-    export let activities: StravaActivity[];
+    export let activities: StravaActivity[] = [];
+    export let loadingError = "";
 
     let settingTimes: boolean;
     let settingTimesError: boolean;
+    const f = resilientFetch(fetch);
 
     const handleSetTimes = (activity: StravaActivity) => async () => {
         settingTimes = true;
         settingTimesError = false;
-        const f = resilientFetch(fetch);
         try {
             const response = await f(`/api/setTimes/${activity.id}`);
             if (!response.ok) {
@@ -55,14 +61,22 @@
         }
 
         loadingPage = true;
+        loadingError = "";
         try {
-            const activitiesInNewPage = await getActivities(
+            const getActivitiesResult = await getActivities(
                 fetch,
                 $session.token,
                 $session.measurementPreference,
                 currentPage + 1,
             );
-            console.log(activitiesInNewPage);
+
+            if (getActivitiesResult.result === ApiResult.Error) {
+                canLoadMore = false;
+                loadingError = getActivitiesResult.error;
+                return;
+            }
+
+            const activitiesInNewPage = getActivitiesResult.activities;
             canLoadMore = activitiesInNewPage.length > 0;
             activities = [...activities, ...activitiesInNewPage];
         } finally {
@@ -72,11 +86,23 @@
     }
 </script>
 
-<ul class="card-display" on:scroll={onScroll}>
-    {#each activities as activity}
-        <ActivityCard {activity} disabled={settingTimes} onSetTimes={handleSetTimes(activity)} />
-    {/each}
-</ul>
+{#if loadingError}
+    <div class="loading-error">
+        <Paper color="primary"
+            ><Title>Loading error</Title>
+            <Content>There was an error loading your activities from Strava. Please try again.</Content></Paper
+        >
+    </div>
+{/if}
+
+{#if activities.length}
+    <ul class="card-display" on:scroll={onScroll}>
+        {#each activities as activity}
+            <ActivityCard {activity} disabled={settingTimes} onSetTimes={handleSetTimes(activity)} />
+        {/each}
+    </ul>
+{/if}
+
 {#if settingTimesError}
     <Snackbar><Label>There was an error setting the times. Please try again.</Label></Snackbar>
 {/if}
@@ -89,5 +115,9 @@
         padding-right: 16px;
         height: 100%;
         overflow-y: auto;
+    }
+
+    .loading-error {
+        margin-right: 16px;
     }
 </style>

@@ -956,6 +956,19 @@
     "@smui/menu-surface" "^5.0.1"
     svelte2tsx "^0.4.6"
 
+"@smui/paper@^5.0.0":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@smui/paper/-/paper-5.0.1.tgz#e941feecbac6af71d3aaa7158dfc45942743928c"
+  integrity sha512-hWZswIi6hI3+P/BhocCWQ4xhYbUsNrDLf+yrTr8RzPeA7/WvVzG9ZfdL3YVlasQKdDZrafjbW7sPhiZv6pb9mA==
+  dependencies:
+    "@material/elevation" "^11.0.0"
+    "@material/feature-targeting" "^11.0.0"
+    "@material/shape" "^11.0.0"
+    "@material/theme" "^11.0.0"
+    "@material/typography" "^11.0.0"
+    "@smui/common" "^5.0.1"
+    svelte2tsx "^0.4.6"
+
 "@smui/ripple@^5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@smui/ripple/-/ripple-5.0.0.tgz#8172eb7aa1a334469130f3eaad29764d6f84c1aa"

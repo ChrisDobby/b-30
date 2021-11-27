@@ -60,3 +60,10 @@ export type Store = {
 };
 
 export type Api = (request: ServerRequest, args?: any) => Promise<EndpointOutput>;
+
+export enum ApiResult {
+    Success = "success",
+    Error = "error",
+}
+
+export type ApiError = { result: ApiResult.Error; error?: string };
