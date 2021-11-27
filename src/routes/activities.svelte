@@ -86,6 +86,10 @@
     }
 </script>
 
+<svelte:head>
+    <title>Actvities for {$session.user.firstName} {$session.user.lastName}</title>
+</svelte:head>
+
 {#if loadingError}
     <div class="loading-error">
         <Paper color="primary"

@@ -17,6 +17,13 @@
     import "../app.scss";
 </script>
 
+<svelte:head>
+    <title>Breaking 30</title>
+    <meta
+        name="description"
+        content="Analyse your Strava runs based on the Brightside PCT breaking 30 mastery program"
+    />
+</svelte:head>
 <div class="home-page">
     <h5>Analyse your Strava runs based on the</h5>
     <h5 class="brightside-link">
