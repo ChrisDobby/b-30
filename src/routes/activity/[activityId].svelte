@@ -1,8 +1,8 @@
 <script context="module" lang="ts">
     import { analyseStreams } from "$lib/analysis";
-
     import { securePage } from "$lib/authentication";
     import resilientFetch from "$lib/resilientFetch";
+    import { format } from "date-fns";
 
     export const load = securePage(async ({ session, fetch, page }) => {
         if (!session.times) {
@@ -66,22 +66,14 @@
 <script lang="ts">
     import Paper, { Title, Content } from "@smui/paper";
     import { fade } from "svelte/transition";
-    import type { AnalysisResult } from "$lib/types";
-    import { format } from "date-fns";
+    import type { DisplayActivity } from "$lib/types";
+    import Activity from "$lib/activity.svelte";
 
     import "../../app.scss";
 
-    type Activity = {
-        name: string;
-        dateTime: string;
-        distance: number;
-        movingTime: number;
-        averageSpeed: number;
-        analysis: AnalysisResult;
-    };
     export let error: string | null = null;
     export let noTimes: boolean = false;
-    export let activity: Activity | null = null;
+    export let activity: DisplayActivity | null = null;
 </script>
 
 <svelte:head>
@@ -105,7 +97,9 @@
             >
         </div>
     {/if}
-    <code>{JSON.stringify(activity, null, 4)} </code>
+    {#if activity}
+        <Activity {activity} />
+    {/if}
 </div>
 
 <style>

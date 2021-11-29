@@ -92,3 +92,12 @@ export type LapAnalysis = ActivityLap & Analysis;
 export type AnalysisResult = Analysis & {
     laps: LapAnalysis[];
 };
+
+export type DisplayActivity = {
+    name: string;
+    dateTime: string;
+    distance: number;
+    movingTime: number;
+    averageSpeed: number;
+    analysis: AnalysisResult;
+};
