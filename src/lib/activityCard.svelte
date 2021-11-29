@@ -12,11 +12,13 @@
 <li class="card-container" in:fade>
     <Card
         ><Content
-            ><div class="activity-name">{activity.name}</div>
-            <div class="activity-date">{activity.date}</div>
-            <div class="activity-data">{`Distance: ${activity.distance}`}</div>
-            <div class="activity-data">{`Time: ${activity.time}`}</div>
-            <div class="activity-data">{`Pace: ${activity.pace}`}</div>
+            ><a href={`/activity/${activity.id}`}
+                ><div class="activity-name">{activity.name}</div>
+                <div class="activity-date">{activity.date}</div>
+                <div class="activity-data">{`Distance: ${activity.distance}`}</div>
+                <div class="activity-data">{`Time: ${activity.time}`}</div>
+                <div class="activity-data">{`Pace: ${activity.pace}`}</div></a
+            >
         </Content>
         <Actions>
             <ActionButtons>
@@ -33,6 +35,10 @@
 </li>
 
 <style>
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
     .card-container {
         margin-bottom: 2rem;
     }

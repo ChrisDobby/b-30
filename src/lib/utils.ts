@@ -3,7 +3,7 @@ import { ApiResult } from "./types";
 import { MeasurementPreference } from "./types";
 import { format } from "date-fns";
 
-const METRES_IN_KM = 1000;
+export const METRES_IN_KM = 1000;
 const METRES_IN_MILE = 1609.34;
 const SECONDS_IN_MINUTE = 60;
 const MINUTES_IN_HOUR = 60;

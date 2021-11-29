@@ -8,7 +8,7 @@ export type User = {
     profile: string;
 };
 
-type TimeRange = { low: number; high: number };
+export type TimeRange = { low: number; high: number };
 export type Times = {
     date5k: number;
     recovery: TimeRange;
@@ -68,3 +68,27 @@ export enum ApiResult {
 }
 
 export type ApiError = { result: ApiResult.Error; error?: string };
+
+export type ActivityLap = {
+    id: number;
+    name: string;
+    movingTime: number;
+    distance: number;
+    averageSpeed: number;
+    startIndex: number;
+    endIndex: number;
+};
+
+export type PaceAnalysis = {
+    recovery: number;
+    tempo: number;
+    five: number;
+    overPace: number;
+    strides: number;
+};
+export type Analysis = { percentageOfTimeAtPace: PaceAnalysis; averageHeartRateAtPace: PaceAnalysis };
+export type LapAnalysis = ActivityLap & Analysis;
+
+export type AnalysisResult = Analysis & {
+    laps: LapAnalysis[];
+};
