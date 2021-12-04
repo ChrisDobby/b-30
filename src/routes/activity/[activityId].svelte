@@ -80,7 +80,7 @@
     <title>{activity ? `${activity.name} ${activity.dateTime}` : "Breaking 30"}</title>
 </svelte:head>
 
-<div in:fade>
+<div class="activity-container" in:fade>
     {#if error}
         <div class="error">
             <Paper color="primary"
@@ -105,5 +105,10 @@
 <style>
     .error {
         margin-right: 16px;
+    }
+
+    .activity-container {
+        height: 100%;
+        overflow-y: hidden;
     }
 </style>

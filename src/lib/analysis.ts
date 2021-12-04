@@ -1,4 +1,13 @@
-import type { Times, TimeRange, ActivityLap, LapAnalysis, PaceAnalysis, Analysis, AnalysisResult } from "./types";
+import type {
+    Times,
+    TimeRange,
+    ActivityLap,
+    LapAnalysis,
+    PaceAnalysis,
+    Analysis,
+    AnalysisResult,
+    PaceAnalysisWithOther,
+} from "./types";
 import { METRES_IN_KM } from "./utils";
 
 function isInRange(secondsPerKm: number, range: TimeRange) {
@@ -28,21 +37,26 @@ function getLapStreams(lap: ActivityLap, velocityStream: number[], heartrateStre
 }
 
 function getPercentage(value: number, count: number) {
-    return (value / count) * 100;
+    return Math.round((value / count) * 100);
 }
 
 function getAverageFromArray(array: number[]) {
-    return array.reduce((a, b) => a + b, 0) / array.length || 0;
+    return Math.round(array.reduce((a, b) => a + b, 0) / array.length || 0);
 }
 
 function createLapAnalysis(lap: ActivityLap, paceAnalysis, heartRateAnalysis): LapAnalysis {
     const count = lap.endIndex - lap.startIndex;
-    const percentageOfTimeAtPace: PaceAnalysis = {
+    const timeAtPace = {
         recovery: getPercentage(paceAnalysis.recovery, count),
         tempo: getPercentage(paceAnalysis.tempo, count),
         five: getPercentage(paceAnalysis.five, count),
         overPace: getPercentage(paceAnalysis.overPace, count),
         strides: getPercentage(paceAnalysis.strides, count),
+    };
+
+    const percentageOfTimeAtPace: PaceAnalysisWithOther = {
+        ...timeAtPace,
+        other: 100 - Object.values(timeAtPace).reduce((a, b) => a + b, 0),
     };
     const averageHeartRateAtPace: PaceAnalysis = {
         recovery: getAverageFromArray(heartRateAnalysis.recovery),
@@ -56,12 +70,16 @@ function createLapAnalysis(lap: ActivityLap, paceAnalysis, heartRateAnalysis): L
 }
 
 function getFullAnalysisFromLaps(laps: LapAnalysis[]): Analysis {
-    const percentageOfTimeAtPace: PaceAnalysis = {
-        recovery: laps.reduce((a, b) => a + b.percentageOfTimeAtPace.recovery, 0) / laps.length,
-        tempo: laps.reduce((a, b) => a + b.percentageOfTimeAtPace.tempo, 0) / laps.length,
-        five: laps.reduce((a, b) => a + b.percentageOfTimeAtPace.five, 0) / laps.length,
-        overPace: laps.reduce((a, b) => a + b.percentageOfTimeAtPace.overPace, 0) / laps.length,
-        strides: laps.reduce((a, b) => a + b.percentageOfTimeAtPace.strides, 0) / laps.length,
+    const timeAtPace = {
+        recovery: Math.round(laps.reduce((a, b) => a + b.percentageOfTimeAtPace.recovery, 0) / laps.length),
+        tempo: Math.round(laps.reduce((a, b) => a + b.percentageOfTimeAtPace.tempo, 0) / laps.length),
+        five: Math.round(laps.reduce((a, b) => a + b.percentageOfTimeAtPace.five, 0) / laps.length),
+        overPace: Math.round(laps.reduce((a, b) => a + b.percentageOfTimeAtPace.overPace, 0) / laps.length),
+        strides: Math.round(laps.reduce((a, b) => a + b.percentageOfTimeAtPace.strides, 0) / laps.length),
+    };
+    const percentageOfTimeAtPace: PaceAnalysisWithOther = {
+        ...timeAtPace,
+        other: 100 - Object.values(timeAtPace).reduce((a, b) => a + b, 0),
     };
 
     const averageHeartRateAtPace: PaceAnalysis = {

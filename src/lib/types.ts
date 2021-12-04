@@ -86,7 +86,10 @@ export type PaceAnalysis = {
     overPace: number;
     strides: number;
 };
-export type Analysis = { percentageOfTimeAtPace: PaceAnalysis; averageHeartRateAtPace: PaceAnalysis };
+
+export type PaceAnalysisWithOther = PaceAnalysis & { other: number };
+
+export type Analysis = { percentageOfTimeAtPace: PaceAnalysisWithOther; averageHeartRateAtPace: PaceAnalysis };
 export type LapAnalysis = ActivityLap & Analysis;
 
 export type AnalysisResult = Analysis & {
