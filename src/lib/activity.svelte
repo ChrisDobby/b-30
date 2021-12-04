@@ -3,6 +3,7 @@
     import { distance, timeFromSeconds, calculateSpeedAndPace } from "$lib/utils";
     import { session } from "$app/stores";
     import ActivityCharts from "$lib/activityCharts.svelte";
+    import LapChart from "$lib/lapChart.svelte";
 
     const getDistance = distance($session.measurementPreference);
     const getSpeedAndPace = calculateSpeedAndPace($session.measurementPreference);
@@ -22,6 +23,7 @@
     </div>
     <div class="activity-data">
         <ActivityCharts analysis={activity.analysis} />
+        <LapChart laps={activity.analysis.laps} />
     </div>
 </div>
 

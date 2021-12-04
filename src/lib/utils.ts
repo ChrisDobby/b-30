@@ -125,3 +125,12 @@ export async function getActivities(
         })),
     };
 }
+
+export const CHART_DISPLAY = {
+    recovery: { colour: "blue", label: "Recovery" },
+    tempo: { colour: "green", label: "Tempo" },
+    five: { colour: "yellow", label: "5K" },
+    overPace: { colour: "orange", label: "Over pace" },
+    strides: { colour: "red", label: "Strides" },
+    other: { colour: "gray", label: "Other" },
+};

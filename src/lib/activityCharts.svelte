@@ -1,17 +1,10 @@
 <script lang="ts">
-    import type { AnalysisResult } from "./types";
+    import type { Analysis } from "./types";
     import Doughnut from "svelte-chartjs/src/Doughnut.svelte";
     import Bar from "svelte-chartjs/src/Bar.svelte";
+    import { CHART_DISPLAY } from "$lib/utils";
 
-    export let analysis: AnalysisResult;
-    const display = {
-        recovery: { colour: "blue", label: "Recovery" },
-        tempo: { colour: "green", label: "Tempo" },
-        five: { colour: "yellow", label: "5K" },
-        overPace: { colour: "orange", label: "Over pace" },
-        strides: { colour: "red", label: "Strides" },
-        other: { colour: "gray", label: "Other" },
-    };
+    export let analysis: Analysis;
 
     const displayData = Object.entries(analysis.percentageOfTimeAtPace).reduce(
         (acc, entry) => {
@@ -32,23 +25,23 @@
     );
 
     const timeData = {
-        labels: displayData.times.map(([key, value]) => `${display[key].label} ${value}%`),
+        labels: displayData.times.map(([key, value]) => `${CHART_DISPLAY[key].label} ${value}%`),
         datasets: [
             {
                 data: displayData.times.map(([_, value]) => value),
-                backgroundColor: displayData.times.map(([key]) => display[key].colour),
+                backgroundColor: displayData.times.map(([key]) => CHART_DISPLAY[key].colour),
                 borderWidth: 0,
             },
         ],
     };
 
     const heartrateData = {
-        labels: displayData.heartRates.map(({ key, value }) => `${display[key].label} ${value}`),
+        labels: displayData.heartRates.map(({ key, value }) => `${CHART_DISPLAY[key].label} ${value}`),
         datasets: [
             {
                 label: "Heartrate",
                 data: displayData.heartRates.map(({ value }) => value),
-                backgroundColor: displayData.heartRates.map(({ key }) => display[key].colour),
+                backgroundColor: displayData.heartRates.map(({ key }) => CHART_DISPLAY[key].colour),
             },
         ],
     };
