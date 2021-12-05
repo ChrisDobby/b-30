@@ -8,14 +8,18 @@ export type User = {
     profile: string;
 };
 
-type TimeRange = { low: number; high: number };
-export type Times = {
+export type TimeRange = { low: number; high: number };
+export type Paces = {
     date5k: number;
     recovery: TimeRange;
     tempo: TimeRange;
     five: TimeRange;
     overPace: TimeRange;
     strides: TimeRange;
+};
+
+export type Times = Paces & {
+    dateTime: string;
     fromActivityId?: string;
 };
 
@@ -27,9 +31,10 @@ export enum MeasurementPreference {
 export type Session = {
     user?: User;
     token?: string;
-    times?: Times;
+    times?: Times[];
     measurementPreference?: MeasurementPreference;
     timesError?: boolean;
+    pacesDate?: Date;
 };
 
 export type AuthenticatedAthlete = {
@@ -56,8 +61,8 @@ export type StravaActivity = {
 };
 
 export type Store = {
-    setTimes: (id: string, times: Times) => Promise<void>;
-    getTimes: (id: string) => Promise<Times | null>;
+    setTimes: (id: string, times: Times[]) => Promise<void>;
+    getTimes: (id: string) => Promise<Times[] | null>;
 };
 
 export type Api = (request: ServerRequest, args?: any) => Promise<EndpointOutput>;
@@ -68,3 +73,39 @@ export enum ApiResult {
 }
 
 export type ApiError = { result: ApiResult.Error; error?: string };
+
+export type ActivityLap = {
+    id: number;
+    name: string;
+    movingTime: number;
+    distance: number;
+    averageSpeed: number;
+    startIndex: number;
+    endIndex: number;
+};
+
+export type PaceAnalysis = {
+    recovery: number;
+    tempo: number;
+    five: number;
+    overPace: number;
+    strides: number;
+};
+
+export type PaceAnalysisWithOther = PaceAnalysis & { other: number };
+
+export type Analysis = { percentageOfTimeAtPace: PaceAnalysisWithOther; averageHeartRateAtPace: PaceAnalysis };
+export type LapAnalysis = ActivityLap & Analysis;
+
+export type AnalysisResult = Analysis & {
+    laps: LapAnalysis[];
+};
+
+export type DisplayActivity = {
+    name: string;
+    dateTime: string;
+    distance: number;
+    movingTime: number;
+    averageSpeed: number;
+    analysis: AnalysisResult;
+};

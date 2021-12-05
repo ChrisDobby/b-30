@@ -37,7 +37,7 @@
             if (!response.ok) {
                 errorSnackbar.open();
             } else {
-                const times = await response.json();
+                const { times } = await response.json();
                 $session.times = times;
             }
         } catch (e) {

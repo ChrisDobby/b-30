@@ -1,9 +1,9 @@
-import type { ApiError, StravaActivity, Times } from "./types";
+import type { ApiError, Paces, StravaActivity, Times } from "./types";
 import { ApiResult } from "./types";
 import { MeasurementPreference } from "./types";
 import { format } from "date-fns";
 
-const METRES_IN_KM = 1000;
+export const METRES_IN_KM = 1000;
 const METRES_IN_MILE = 1609.34;
 const SECONDS_IN_MINUTE = 60;
 const MINUTES_IN_HOUR = 60;
@@ -71,7 +71,7 @@ export const calculateSpeedAndPace =
         return [`${to2Decimals(kmPerHour)} ${unit}/hour`, `${timeFromSeconds(secondsPerKm)}/${unit}`];
     };
 
-function getPaces(date5kTime: number, date5kSecondsPerKm: number): Times {
+function getPaces(date5kTime: number, date5kSecondsPerKm: number): Paces {
     return {
         date5k: date5kTime,
         recovery: { low: date5kSecondsPerKm + 56, high: date5kSecondsPerKm + 75 },
@@ -82,14 +82,14 @@ function getPaces(date5kTime: number, date5kSecondsPerKm: number): Times {
     };
 }
 
-export function calculatePaces(date5k: number): Times {
+export function calculatePaces(date5k: number): Paces {
     const date5kSecondsPerKm = METRES_IN_KM / date5k;
     const date5kTime = Math.floor(date5kSecondsPerKm * 5);
 
     return getPaces(date5kTime, date5kSecondsPerKm);
 }
 
-export function calculatePacesFromTime(date5kTime: number): Times {
+export function calculatePacesFromTime(date5kTime: number): Paces {
     const date5kSecondsPerKm = date5kTime / 5;
     return getPaces(date5kTime, date5kSecondsPerKm);
 }
@@ -125,3 +125,36 @@ export async function getActivities(
         })),
     };
 }
+
+export function getTimesToStore(times: Times[] | null, paces: Paces, fromActivityId?: string): Times[] {
+    const date = format(new Date(), "dd-MMM-yyyy");
+    const pacesWithActivityId = fromActivityId ? { ...paces, fromActivityId } : paces;
+    const newTime = { ...pacesWithActivityId, dateTime: new Date().toISOString() };
+    return times.length === 1 && format(new Date(times[0].dateTime), "dd-MMM-yyy") === date
+        ? [newTime]
+        : [...times, newTime];
+}
+
+export function getPacesForDateTime(dateTime: Date, times: Times[] | null): Paces | null {
+    if (!times || !times.length) {
+        return null;
+    }
+
+    if (times.length === 1) {
+        return times[0];
+    }
+
+    const sortedTimes = [...times].sort((a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime());
+    const filteredTimes = sortedTimes.filter(time => new Date(time.dateTime) <= dateTime).reverse();
+
+    return filteredTimes.length ? filteredTimes[0] : sortedTimes[0];
+}
+
+export const CHART_DISPLAY = {
+    recovery: { colour: "blue", label: "Recovery" },
+    tempo: { colour: "green", label: "Tempo" },
+    five: { colour: "yellow", label: "5K" },
+    overPace: { colour: "orange", label: "Over pace" },
+    strides: { colour: "red", label: "Strides" },
+    other: { colour: "gray", label: "Other" },
+};

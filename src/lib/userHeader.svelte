@@ -1,16 +1,16 @@
 <script lang="ts">
-    import type { User, Times } from "./types";
+    import type { User, Times, Session } from "./types";
     import { session } from "$app/stores";
-    import { timeFromSeconds, calculateSpeedAndPace } from "$lib/utils";
+    import { timeFromSeconds, calculateSpeedAndPace, getPacesForDateTime } from "$lib/utils";
     import PaceGrid from "$lib/paceGrid.svelte";
     import { slide } from "svelte/transition";
 
     const getSpeedAndPace = calculateSpeedAndPace($session.measurementPreference);
 
     const user = $session.user as User;
-    let times = $session.times as Times;
-    session.subscribe(update => {
-        times = update.times;
+    let currentPaces = getPacesForDateTime(new Date(), $session.times as Times[] | null);
+    session.subscribe((update: Session) => {
+        currentPaces = getPacesForDateTime(update.pacesDate || new Date(), update.times);
     });
 
     let showingPaces = false;
@@ -23,9 +23,11 @@
             <div class="user-name">{`${user.firstName} ${user.lastName}`}</div>
         </div>
         <div class="times-header">
-            {#if times}
+            {#if currentPaces}
                 <div class="five-k-description">
-                    {`Date 5k time: ${timeFromSeconds(times.date5k)} at ${getSpeedAndPace(5000 / times.date5k)[1]}`}
+                    {`Date 5k time: ${timeFromSeconds(currentPaces.date5k)} at ${
+                        getSpeedAndPace(5000 / currentPaces.date5k)[1]
+                    }`}
                 </div>
                 <i class={showingPaces ? "up-arrow" : "down-arrow"} />
             {:else if $session.timesError}
@@ -34,9 +36,9 @@
                 <p class="small">You have no paces set</p>
             {/if}
         </div>
-        {#if showingPaces && times}
+        {#if showingPaces && currentPaces}
             <div class="times-detail" transition:slide>
-                <PaceGrid {times} measurementPreference={$session.measurementPreference} />
+                <PaceGrid paces={currentPaces} measurementPreference={$session.measurementPreference} />
             </div>
         {/if}
     </button>

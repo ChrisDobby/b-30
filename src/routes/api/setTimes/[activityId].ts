@@ -1,5 +1,5 @@
 import { secureApi } from "$lib/authentication";
-import { calculatePaces } from "$lib/utils";
+import { calculatePaces, getTimesToStore } from "$lib/utils";
 import withStore from "$lib/withStore";
 import type { Store } from "$lib/types";
 import type { EndpointOutput } from "@sveltejs/kit";
@@ -11,7 +11,10 @@ const f = resilientFetch(fetch);
 type StoreArgs = { store: Store };
 export const post = withStore(
     secureApi(
-        async ({ params, locals }: ServerRequest, { store: { setTimes } }: StoreArgs): Promise<EndpointOutput> => {
+        async (
+            { params, locals }: ServerRequest,
+            { store: { setTimes, getTimes } }: StoreArgs,
+        ): Promise<EndpointOutput> => {
             const { activityId } = params;
 
             try {
@@ -24,10 +27,11 @@ export const post = withStore(
                 }
 
                 const activity = await activityResponse.json();
-                const times = { ...calculatePaces(activity.average_speed), fromActivityId: activityId };
-                await setTimes(activity.athlete.id, times);
+                const times = await getTimes(activity.athlete.id);
+                const timesToStore = getTimesToStore(times, calculatePaces(activity.average_speed), activityId);
+                await setTimes(activity.athlete.id, timesToStore);
 
-                return { status: 200, body: times };
+                return { status: 200, body: { times: timesToStore } };
             } catch (e) {
                 return { status: 500 };
             }
