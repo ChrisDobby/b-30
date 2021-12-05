@@ -32,6 +32,7 @@
             const streams = await getStreamsResponse.json();
             const activityDate = new Date(activity.start_date);
             const paces = getPacesForDateTime(activityDate, session.times);
+            const currentPaces = getPacesForDateTime(new Date(), session.times);
 
             const analysis = analyseStreams(
                 paces,
@@ -48,7 +49,6 @@
                 streams.heartrate.data,
             );
 
-            session.pacesDate = activityDate;
             return {
                 props: {
                     activity: {
@@ -59,6 +59,8 @@
                         averageSpeed: activity.average_speed,
                         analysis,
                     },
+                    pacesDate: activity.start_date,
+                    notCurrentPaces: paces.date5k !== currentPaces.date5k,
                 },
             };
         } catch (e) {
@@ -80,9 +82,14 @@
     export let error: string | null = null;
     export let noTimes: boolean = false;
     export let activity: DisplayActivity | null = null;
+    export let pacesDate: string | null = null;
+    export let notCurrentPaces: boolean = false;
 
-    onMount(() => () => {
-        $session.pacesDate = null;
+    onMount(() => {
+        $session.pacesDate = pacesDate ? new Date(pacesDate) : null;
+        return () => {
+            $session.pacesDate = null;
+        };
     });
 </script>
 
@@ -108,7 +115,7 @@
         </div>
     {/if}
     {#if activity}
-        <Activity {activity} />
+        <Activity {activity} {notCurrentPaces} />
     {/if}
 </div>
 
