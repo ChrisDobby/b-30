@@ -1,5 +1,5 @@
 import type {
-    Times,
+    Paces,
     TimeRange,
     ActivityLap,
     LapAnalysis,
@@ -18,13 +18,13 @@ function getSecondsPerKm(metresPerSecond: number) {
     return METRES_IN_KM / metresPerSecond;
 }
 
-type Paces = "recovery" | "tempo" | "five" | "overPace" | "strides";
-function getPaceForSpeed(times: Times, speed: number): Paces | null {
+type PaceProperties = "recovery" | "tempo" | "five" | "overPace" | "strides";
+function getPaceForSpeed(paces: Paces, speed: number): PaceProperties | null {
     const secondsPerKm = getSecondsPerKm(speed);
     return (
         (["recovery", "tempo", "five", "overPace", "strides"].find(pace =>
-            isInRange(secondsPerKm, times[pace]),
-        ) as Paces) || null
+            isInRange(secondsPerKm, paces[pace]),
+        ) as PaceProperties) || null
     );
 }
 
@@ -94,7 +94,7 @@ function getFullAnalysisFromLaps(laps: LapAnalysis[]): Analysis {
 }
 
 export function analyseStreams(
-    times: Times,
+    paces: Paces,
     laps: ActivityLap[],
     velocityStream: number[],
     heartrateStream: number[],
@@ -122,7 +122,7 @@ export function analyseStreams(
         for (let i = 0; i < lapStream.lapVelocity.length; i++) {
             const lapVelocity = lapStream.lapVelocity[i];
             const lapHeartRate = lapStream.lapHeartRate[i];
-            const pace = getPaceForSpeed(times, lapVelocity);
+            const pace = getPaceForSpeed(paces, lapVelocity);
             if (!pace) {
                 continue;
             }

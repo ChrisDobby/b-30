@@ -9,13 +9,17 @@ export type User = {
 };
 
 export type TimeRange = { low: number; high: number };
-export type Times = {
+export type Paces = {
     date5k: number;
     recovery: TimeRange;
     tempo: TimeRange;
     five: TimeRange;
     overPace: TimeRange;
     strides: TimeRange;
+};
+
+export type Times = Paces & {
+    dateTime: string;
     fromActivityId?: string;
 };
 
@@ -27,7 +31,7 @@ export enum MeasurementPreference {
 export type Session = {
     user?: User;
     token?: string;
-    times?: Times;
+    times?: Times[];
     measurementPreference?: MeasurementPreference;
     timesError?: boolean;
 };
@@ -56,8 +60,8 @@ export type StravaActivity = {
 };
 
 export type Store = {
-    setTimes: (id: string, times: Times) => Promise<void>;
-    getTimes: (id: string) => Promise<Times | null>;
+    setTimes: (id: string, times: Times[]) => Promise<void>;
+    getTimes: (id: string) => Promise<Times[] | null>;
 };
 
 export type Api = (request: ServerRequest, args?: any) => Promise<EndpointOutput>;

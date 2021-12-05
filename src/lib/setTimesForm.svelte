@@ -1,6 +1,6 @@
 <script lang="ts">
     import PaceEntry from "$lib/paceEntry.svelte";
-    import { calculatePacesFromTime } from "$lib/utils";
+    import { calculatePacesFromTime, getPacesForDateTime } from "$lib/utils";
     import { session } from "$app/stores";
     import PaceGrid from "$lib/paceGrid.svelte";
     import Snackbar, { Label, SnackbarComponentDev } from "@smui/snackbar";
@@ -9,9 +9,10 @@
 
     import "../app.scss";
 
-    let date5k = $session.times ? Math.round($session.times.date5k / 5) : 360;
+    const currentPaces = getPacesForDateTime(new Date(), $session.times);
+    let date5k = currentPaces ? Math.round(currentPaces.date5k / 5) : 360;
 
-    $: times = calculatePacesFromTime(date5k * 5);
+    $: paces = calculatePacesFromTime(date5k * 5);
 
     let settingTimes: boolean;
     let errorSnackbar: SnackbarComponentDev;
@@ -29,10 +30,11 @@
                     Authorization: `Bearer ${$session.token}`,
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ times }),
+                body: JSON.stringify({ paces }),
             });
 
             if (response.ok) {
+                const { times } = await response.json();
                 $session.times = times;
                 onChange();
             } else {
@@ -50,7 +52,7 @@
     <fieldset>
         <legend>Enter your 5k times</legend>
         <PaceEntry label="Date 5k time" distance={5000} bind:secondsPerKm={date5k} bind:disabled={settingTimes} />
-        <PaceGrid {times} measurementPreference={$session.measurementPreference} />
+        <PaceGrid {paces} measurementPreference={$session.measurementPreference} />
         <div class="buttons">
             <Button type="submit" disabled={settingTimes} variant="raised">
                 {settingTimes ? "Setting times..." : "Set times"}

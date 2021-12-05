@@ -3,9 +3,10 @@
     import { securePage } from "$lib/authentication";
     import resilientFetch from "$lib/resilientFetch";
     import { format } from "date-fns";
+    import { getPacesForDateTime } from "$lib/utils";
 
     export const load = securePage(async ({ session, fetch, page }) => {
-        if (!session.times) {
+        if (!session.times || !session.times.length) {
             return { props: { noTimes: true } };
         }
 
@@ -29,9 +30,10 @@
 
             const activity = await getActivityResponse.json();
             const streams = await getStreamsResponse.json();
+            const paces = getPacesForDateTime(new Date(activity.start_date), session.times);
 
             const analysis = analyseStreams(
-                session.times,
+                paces,
                 activity.laps.map(a => ({
                     id: a.id,
                     name: a.name,

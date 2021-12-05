@@ -1,4 +1,4 @@
-import type { ApiError, StravaActivity, Times } from "./types";
+import type { ApiError, Paces, StravaActivity, Times } from "./types";
 import { ApiResult } from "./types";
 import { MeasurementPreference } from "./types";
 import { format } from "date-fns";
@@ -71,7 +71,7 @@ export const calculateSpeedAndPace =
         return [`${to2Decimals(kmPerHour)} ${unit}/hour`, `${timeFromSeconds(secondsPerKm)}/${unit}`];
     };
 
-function getPaces(date5kTime: number, date5kSecondsPerKm: number): Times {
+function getPaces(date5kTime: number, date5kSecondsPerKm: number): Paces {
     return {
         date5k: date5kTime,
         recovery: { low: date5kSecondsPerKm + 56, high: date5kSecondsPerKm + 75 },
@@ -82,14 +82,14 @@ function getPaces(date5kTime: number, date5kSecondsPerKm: number): Times {
     };
 }
 
-export function calculatePaces(date5k: number): Times {
+export function calculatePaces(date5k: number): Paces {
     const date5kSecondsPerKm = METRES_IN_KM / date5k;
     const date5kTime = Math.floor(date5kSecondsPerKm * 5);
 
     return getPaces(date5kTime, date5kSecondsPerKm);
 }
 
-export function calculatePacesFromTime(date5kTime: number): Times {
+export function calculatePacesFromTime(date5kTime: number): Paces {
     const date5kSecondsPerKm = date5kTime / 5;
     return getPaces(date5kTime, date5kSecondsPerKm);
 }
@@ -124,6 +124,19 @@ export async function getActivities(
             pace: getSpeedAndPace(activity.average_speed)[1],
         })),
     };
+}
+
+export function getTimesToStore(times: Times[] | null, paces: Paces, fromActivityId?: string): Times[] {
+    const pacesWithActivityId = fromActivityId ? { ...paces, fromActivityId } : paces;
+    return [...(times || []), { ...pacesWithActivityId, dateTime: new Date().toISOString() }];
+}
+
+export function getPacesForDateTime(dateTime: Date, times: Times[] | null): Paces | null {
+    if (!times || !times.length) {
+        return null;
+    }
+    console.log(dateTime);
+    return times[0];
 }
 
 export const CHART_DISPLAY = {

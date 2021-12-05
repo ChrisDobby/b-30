@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { User, Times } from "./types";
     import { session } from "$app/stores";
-    import { timeFromSeconds, calculateSpeedAndPace } from "$lib/utils";
+    import { timeFromSeconds, calculateSpeedAndPace, getPacesForDateTime } from "$lib/utils";
     import PaceGrid from "$lib/paceGrid.svelte";
     import Button from "@smui/button";
     import SetTimesForm from "$lib/setTimesForm.svelte";
@@ -10,10 +10,12 @@
     const getSpeedAndPace = calculateSpeedAndPace($session.measurementPreference);
 
     const user = $session.user as User;
-    let times = $session.times as Times;
+    let times = $session.times as Times[] | null;
     session.subscribe(update => {
         times = update.times;
     });
+
+    const currentPaces = getPacesForDateTime(new Date(), times);
 
     let settingTimes = false;
 
@@ -30,7 +32,9 @@
             <div class="times-header" in:slide>
                 {#if times}
                     <div class="five-k-description">
-                        {`Date 5k time: ${timeFromSeconds(times.date5k)} at ${getSpeedAndPace(5000 / times.date5k)[1]}`}
+                        {`Date 5k time: ${timeFromSeconds(currentPaces.date5k)} at ${
+                            getSpeedAndPace(5000 / currentPaces.date5k)[1]
+                        }`}
                     </div>
                 {:else if $session.timesError}
                     <p class="small">Something went wrong getting your paces. Please refresh to try again.</p>
@@ -41,7 +45,7 @@
         {/if}
         {#if times && !settingTimes}
             <div class="times-detail" in:slide>
-                <PaceGrid {times} measurementPreference={$session.measurementPreference} />
+                <PaceGrid paces={currentPaces} measurementPreference={$session.measurementPreference} />
             </div>
             <Button disabled={settingTimes} on:click={() => (settingTimes = true)}
                 >{times ? "Update paces" : "Set paces"}</Button
