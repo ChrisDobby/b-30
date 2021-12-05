@@ -34,6 +34,7 @@ export type Session = {
     times?: Times[];
     measurementPreference?: MeasurementPreference;
     timesError?: boolean;
+    pacesDate?: Date;
 };
 
 export type AuthenticatedAthlete = {

@@ -51,16 +51,18 @@
     data={timeData}
     options={{ responsive: true, plugins: { title: { display: true, text: "% of time at pace" } } }}
 />
-<Bar
-    data={heartrateData}
-    options={{
-        responsive: true,
-        plugins: {
-            legend: { display: false },
-            title: {
-                display: true,
-                text: "Average heart rate at pace",
+{#if heartrateData.labels.length > 0}
+    <Bar
+        data={heartrateData}
+        options={{
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: "Average heart rate at pace",
+                },
             },
-        },
-    }}
-/>
+        }}
+    />
+{/if}

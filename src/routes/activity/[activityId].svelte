@@ -30,7 +30,8 @@
 
             const activity = await getActivityResponse.json();
             const streams = await getStreamsResponse.json();
-            const paces = getPacesForDateTime(new Date(activity.start_date), session.times);
+            const activityDate = new Date(activity.start_date);
+            const paces = getPacesForDateTime(activityDate, session.times);
 
             const analysis = analyseStreams(
                 paces,
@@ -47,6 +48,7 @@
                 streams.heartrate.data,
             );
 
+            session.pacesDate = activityDate;
             return {
                 props: {
                     activity: {
@@ -70,12 +72,18 @@
     import { fade } from "svelte/transition";
     import type { DisplayActivity } from "$lib/types";
     import Activity from "$lib/activity.svelte";
+    import { onMount } from "svelte";
+    import { session } from "$app/stores";
 
     import "../../app.scss";
 
     export let error: string | null = null;
     export let noTimes: boolean = false;
     export let activity: DisplayActivity | null = null;
+
+    onMount(() => () => {
+        $session.pacesDate = null;
+    });
 </script>
 
 <svelte:head>

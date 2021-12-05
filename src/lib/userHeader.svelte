@@ -9,9 +9,8 @@
 
     const user = $session.user as User;
     let currentPaces = getPacesForDateTime(new Date(), $session.times as Times[] | null);
-    // let times = $session.times as Times[] | null;
     session.subscribe((update: Session) => {
-        currentPaces = getPacesForDateTime(new Date(), update.times);
+        currentPaces = getPacesForDateTime(update.pacesDate || new Date(), update.times);
     });
 
     let showingPaces = false;
