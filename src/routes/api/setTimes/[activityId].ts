@@ -11,7 +11,10 @@ const f = resilientFetch(fetch);
 type StoreArgs = { store: Store };
 export const post = withStore(
     secureApi(
-        async ({ params, locals }: ServerRequest, { store: { setTimes } }: StoreArgs): Promise<EndpointOutput> => {
+        async (
+            { params, locals }: ServerRequest,
+            { store: { setTimes, getTimes } }: StoreArgs,
+        ): Promise<EndpointOutput> => {
             const { activityId } = params;
 
             try {
@@ -24,7 +27,8 @@ export const post = withStore(
                 }
 
                 const activity = await activityResponse.json();
-                const timesToStore = getTimesToStore(null, calculatePaces(activity.average_speed), activityId);
+                const times = await getTimes(activity.athlete.id);
+                const timesToStore = getTimesToStore(times, calculatePaces(activity.average_speed), activityId);
                 await setTimes(activity.athlete.id, timesToStore);
 
                 return { status: 200, body: { times: timesToStore } };

@@ -127,16 +127,27 @@ export async function getActivities(
 }
 
 export function getTimesToStore(times: Times[] | null, paces: Paces, fromActivityId?: string): Times[] {
+    const date = format(new Date(), "dd-MMM-yyyy");
     const pacesWithActivityId = fromActivityId ? { ...paces, fromActivityId } : paces;
-    return [...(times || []), { ...pacesWithActivityId, dateTime: new Date().toISOString() }];
+    const newTime = { ...pacesWithActivityId, dateTime: new Date().toISOString() };
+    return times.length === 1 && format(new Date(times[0].dateTime), "dd-MMM-yyy") === date
+        ? [newTime]
+        : [...times, newTime];
 }
 
 export function getPacesForDateTime(dateTime: Date, times: Times[] | null): Paces | null {
     if (!times || !times.length) {
         return null;
     }
-    console.log(dateTime);
-    return times[0];
+
+    if (times.length === 1) {
+        return times[0];
+    }
+
+    const sortedTimes = [...times].sort((a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime());
+    const filteredTimes = sortedTimes.filter(time => new Date(time.dateTime) <= dateTime).reverse();
+
+    return filteredTimes.length ? filteredTimes[0] : sortedTimes[0];
 }
 
 export const CHART_DISPLAY = {
