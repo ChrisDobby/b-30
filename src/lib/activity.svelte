@@ -4,6 +4,7 @@
     import { session } from "$app/stores";
     import ActivityCharts from "$lib/activityCharts.svelte";
     import LapChart from "$lib/lapChart.svelte";
+    import LapSelect from "$lib/lapSelect.svelte";
     import Paper, { Content } from "@smui/paper";
 
     const getDistance = distance($session.measurementPreference);
@@ -36,6 +37,8 @@
     <div class="activity-data">
         <ActivityCharts analysis={activity.analysis} />
         <LapChart laps={activity.analysis.laps} />
+        <hr />
+        <LapSelect {activity} />
     </div>
 </div>
 
@@ -71,5 +74,10 @@
 
     .warning {
         margin-right: 16px;
+    }
+
+    hr {
+        width: 100%;
+        color: var(--mdc-theme-on-secondary, #fff);
     }
 </style>

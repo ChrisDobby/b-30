@@ -24,6 +24,7 @@
         "@smui/list": "^5.0.0",
         "@smui/menu": "^5.0.0",
         "@smui/paper": "^5.0.0",
+        "@smui/select": "^5.0.0",
         "@smui/slider": "^5.0.0",
         "@smui/snackbar": "^5.0.0",
         "@smui/top-app-bar": "^5.0.0",
