@@ -35,13 +35,14 @@
         ],
     };
 
+    const heartratesToDisplay = displayData.heartRates.filter(({ key }) => CHART_DISPLAY[key].isPrimaryPace);
     const heartrateData = {
-        labels: displayData.heartRates.map(({ key, value }) => `${CHART_DISPLAY[key].label} ${value}`),
+        labels: heartratesToDisplay.map(({ key, value }) => `${CHART_DISPLAY[key].label} ${value}`),
         datasets: [
             {
                 label: "Heartrate",
-                data: displayData.heartRates.map(({ value }) => value),
-                backgroundColor: displayData.heartRates.map(({ key }) => CHART_DISPLAY[key].colour),
+                data: heartratesToDisplay.map(({ value }) => value),
+                backgroundColor: heartratesToDisplay.map(({ key }) => CHART_DISPLAY[key].colour),
             },
         ],
     };
@@ -49,7 +50,10 @@
 
 <Doughnut
     data={timeData}
-    options={{ responsive: true, plugins: { title: { display: true, text: "% of time at pace" } } }}
+    options={{
+        responsive: true,
+        plugins: { legend: { display: false }, title: { display: true, text: "% of time at pace" } },
+    }}
 />
 {#if heartrateData.labels.length > 0}
     <Bar
