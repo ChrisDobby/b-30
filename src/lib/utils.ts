@@ -76,7 +76,7 @@ function getPaces(date5kTime: number, date5kSecondsPerKm: number): Paces {
         date5k: date5kTime,
         recovery: { low: date5kSecondsPerKm + 56, high: date5kSecondsPerKm + 75 },
         tempo: { low: date5kSecondsPerKm + 12, high: date5kSecondsPerKm + 19 },
-        five: { low: date5kSecondsPerKm - 2, high: date5kSecondsPerKm + 2 },
+        five: { low: date5kSecondsPerKm - 4, high: date5kSecondsPerKm + 3 },
         overPace: { low: date5kSecondsPerKm - 19, high: date5kSecondsPerKm - 12 },
         strides: { low: date5kSecondsPerKm - 37, high: date5kSecondsPerKm - 25 },
     };
@@ -130,7 +130,7 @@ export function getTimesToStore(times: Times[] | null, paces: Paces, fromActivit
     const date = format(new Date(), "dd-MMM-yyyy");
     const pacesWithActivityId = fromActivityId ? { ...paces, fromActivityId } : paces;
     const newTime = { ...pacesWithActivityId, dateTime: new Date().toISOString() };
-    return times.length === 1 && format(new Date(times[0].dateTime), "dd-MMM-yyy") === date
+    return !times || (times.length === 1 && format(new Date(times[0].dateTime), "dd-MMM-yyy") === date)
         ? [newTime]
         : [...times, newTime];
 }
