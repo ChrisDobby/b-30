@@ -2,6 +2,7 @@
     import type { DisplayActivity, LapAnalysis } from "$lib/types";
     import ActivityCharts from "$lib/activityCharts.svelte";
     import Select, { Option } from "@smui/select";
+    import { fade } from "svelte/transition";
 
     export let activity: DisplayActivity;
 
@@ -16,4 +17,6 @@
         <Option value={index}>{lap.name}</Option>
     {/each}
 </Select>
-<ActivityCharts analysis={displayLap} />
+<div in:fade>
+    <ActivityCharts analysis={displayLap} />
+</div>

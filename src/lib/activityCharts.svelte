@@ -6,8 +6,6 @@
 
     export let analysis: Analysis;
 
-    console.log("analysis", analysis);
-
     let displayData;
     let timeData;
     let heartrateData;
