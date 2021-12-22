@@ -58,7 +58,7 @@
     data={timeData}
     options={{
         responsive: true,
-        plugins: { legend: { display: false }, title: { display: true, text: "% of time at pace" } },
+        plugins: { legend: { display: false }, title: { display: true, text: "% of distance at pace" } },
     }}
 />
 {#if heartrateData.labels.length > 0}
