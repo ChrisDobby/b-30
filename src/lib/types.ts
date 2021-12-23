@@ -86,16 +86,20 @@ export type ActivityLap = {
 
 export type PaceAnalysis = {
     recovery: number;
+    tempoRecovery: number;
     tempo: number;
+    fiveTempo: number;
     five: number;
+    overPaceFive: number;
     overPace: number;
+    stridesOverPace: number;
     strides: number;
 };
 
 export type PaceAnalysisWithOther = PaceAnalysis & { other: number };
 
 export type Analysis = { percentageOfTimeAtPace: PaceAnalysisWithOther; averageHeartRateAtPace: PaceAnalysis };
-export type LapAnalysis = ActivityLap & Analysis;
+export type LapAnalysis = ActivityLap & Analysis & { pace: string };
 
 export type AnalysisResult = Analysis & {
     laps: LapAnalysis[];

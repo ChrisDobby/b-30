@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-    import { analyseStreams } from "$lib/analysis";
+    import { analyseActivity } from "$lib/analysis";
     import { securePage } from "$lib/authentication";
     import resilientFetch from "$lib/resilientFetch";
     import { format } from "date-fns";
@@ -34,7 +34,7 @@
             const paces = getPacesForDateTime(activityDate, session.times);
             const currentPaces = getPacesForDateTime(new Date(), session.times);
 
-            const analysis = analyseStreams(
+            const analysis = analyseActivity(
                 paces,
                 activity.laps.map(a => ({
                     id: a.id,
@@ -45,6 +45,7 @@
                     startIndex: a.start_index,
                     endIndex: a.end_index,
                 })),
+                streams.distance.data,
                 streams.velocity_smooth.data,
                 streams.heartrate.data,
             );

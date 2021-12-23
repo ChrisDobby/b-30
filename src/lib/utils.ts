@@ -76,7 +76,7 @@ function getPaces(date5kTime: number, date5kSecondsPerKm: number): Paces {
         date5k: date5kTime,
         recovery: { low: date5kSecondsPerKm + 56, high: date5kSecondsPerKm + 75 },
         tempo: { low: date5kSecondsPerKm + 12, high: date5kSecondsPerKm + 19 },
-        five: { low: date5kSecondsPerKm - 2, high: date5kSecondsPerKm + 2 },
+        five: { low: date5kSecondsPerKm - 4, high: date5kSecondsPerKm + 3 },
         overPace: { low: date5kSecondsPerKm - 19, high: date5kSecondsPerKm - 12 },
         strides: { low: date5kSecondsPerKm - 37, high: date5kSecondsPerKm - 25 },
     };
@@ -130,7 +130,7 @@ export function getTimesToStore(times: Times[] | null, paces: Paces, fromActivit
     const date = format(new Date(), "dd-MMM-yyyy");
     const pacesWithActivityId = fromActivityId ? { ...paces, fromActivityId } : paces;
     const newTime = { ...pacesWithActivityId, dateTime: new Date().toISOString() };
-    return times.length === 1 && format(new Date(times[0].dateTime), "dd-MMM-yyy") === date
+    return !times || (times.length === 1 && format(new Date(times[0].dateTime), "dd-MMM-yyy") === date)
         ? [newTime]
         : [...times, newTime];
 }
@@ -151,10 +151,14 @@ export function getPacesForDateTime(dateTime: Date, times: Times[] | null): Pace
 }
 
 export const CHART_DISPLAY = {
-    recovery: { colour: "blue", label: "Recovery" },
-    tempo: { colour: "green", label: "Tempo" },
-    five: { colour: "yellow", label: "5K" },
-    overPace: { colour: "orange", label: "Over pace" },
-    strides: { colour: "red", label: "Strides" },
-    other: { colour: "gray", label: "Other" },
+    recovery: { colour: "blue", label: "Recovery", isPrimaryPace: true },
+    tempoRecovery: { colour: "#42f5f2", label: "Recovery->tempo", isPrimaryPace: false },
+    tempo: { colour: "green", label: "Tempo", isPrimaryPace: true },
+    fiveTempo: { colour: "#a7f542", label: "Tempo->5k", isPrimaryPace: false },
+    five: { colour: "#ffbf00", label: "5K", isPrimaryPace: true },
+    overPaceFive: { colour: "#ff9900", label: "5K->over pace", isPrimaryPace: false },
+    overPace: { colour: "#fc4903", label: "Over pace", isPrimaryPace: true },
+    stridesOverPace: { colour: "red", label: "Over pace->strides", isPrimaryPace: false },
+    strides: { colour: "#ff005d", label: "Strides", isPrimaryPace: true },
+    other: { colour: "gray", label: "Other", isPrimaryPace: false },
 };
