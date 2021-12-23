@@ -80,12 +80,19 @@
             }`}
         </p>
     </div>
-    <Button bind:this={showKeyButton} on:click={() => (showingKey = !showingKey)}>Show key</Button>
-    <div class="activity-data">
-        <ActivityCharts analysis={activity.analysis} />
-        <LapChart laps={activity.analysis.laps} />
-        <hr />
-        <LapSelect {activity} />
+    <div class="show-key-button">
+        <Button bind:this={showKeyButton} on:click={() => (showingKey = !showingKey)}>Show key</Button>
+    </div>
+    <div class="activity-view">
+        <div class="inline-key">
+            <ChartKey />
+        </div>
+        <div class="activity-data">
+            <ActivityCharts analysis={activity.analysis} />
+            <LapChart laps={activity.analysis.laps} />
+            <hr />
+            <LapSelect {activity} />
+        </div>
     </div>
 </div>
 
@@ -109,10 +116,18 @@
         font-size: 1em;
     }
 
+    .activity-view {
+        flex: 1;
+        height: 100%;
+        overflow-y: hidden;
+        overflow-x: hidden;
+        display: flex;
+    }
     .activity-data {
         padding: 1em;
         flex: 1;
-        height: 100%;
+        /* flex: 1;
+        height: 100%;*/
         overflow-y: auto;
         overflow-x: hidden;
         display: flex;
@@ -131,5 +146,18 @@
 
     .drawer-content {
         padding: 1em;
+    }
+
+    .inline-key {
+        display: none;
+    }
+    @media (min-width: 600px) {
+        .show-key-button {
+            display: none;
+        }
+
+        .inline-key {
+            display: block;
+        }
     }
 </style>
