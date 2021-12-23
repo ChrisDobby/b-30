@@ -131,6 +131,7 @@
         display: flex;
         flex-direction: column;
         row-gap: 1em;
+        align-items: center;
     }
 
     .warning {
