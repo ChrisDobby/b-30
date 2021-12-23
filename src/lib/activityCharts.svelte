@@ -54,25 +54,35 @@
     }
 </script>
 
-<Doughnut
-    data={timeData}
-    options={{
-        responsive: true,
-        plugins: { legend: { display: false }, title: { display: true, text: "% of distance at pace" } },
-    }}
-/>
-{#if heartrateData.labels.length > 0}
-    <Bar
-        data={heartrateData}
+<div class="chart">
+    <Doughnut
+        data={timeData}
         options={{
             responsive: true,
-            plugins: {
-                legend: { display: false },
-                title: {
-                    display: true,
-                    text: "Average heart rate at pace",
-                },
-            },
+            plugins: { legend: { display: false }, title: { display: true, text: "% of distance at pace" } },
         }}
     />
+</div>
+{#if heartrateData.labels.length > 0}
+    <div class="chart">
+        <Bar
+            data={heartrateData}
+            options={{
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: "Average heart rate at pace",
+                    },
+                },
+            }}
+        />
+    </div>
 {/if}
+
+<style>
+    .chart {
+        max-width: 450px;
+    }
+</style>
