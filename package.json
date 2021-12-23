@@ -19,6 +19,7 @@
         "@smui/button": "^5.0.0",
         "@smui/card": "^5.0.0",
         "@smui/common": "^5.0.0",
+        "@smui/drawer": "^5.0.0",
         "@smui/form-field": "^5.0.0",
         "@smui/icon-button": "^5.0.0",
         "@smui/list": "^5.0.0",

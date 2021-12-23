@@ -152,13 +152,13 @@ export function getPacesForDateTime(dateTime: Date, times: Times[] | null): Pace
 
 export const CHART_DISPLAY = {
     recovery: { colour: "blue", label: "Recovery", isPrimaryPace: true },
-    tempoRecovery: { colour: "#42f5f2", label: "Recovery->tempo" },
+    tempoRecovery: { colour: "#42f5f2", label: "Recovery->tempo", isPrimaryPace: false },
     tempo: { colour: "green", label: "Tempo", isPrimaryPace: true },
-    fiveTempo: { colour: "#a7f542", label: "Tempo->5k" },
+    fiveTempo: { colour: "#a7f542", label: "Tempo->5k", isPrimaryPace: false },
     five: { colour: "yellow", label: "5K", isPrimaryPace: true },
-    overPaceFive: { colour: "#f5ec42", label: "5K->over pace" },
+    overPaceFive: { colour: "#f5ec42", label: "5K->over pace", isPrimaryPace: false },
     overPace: { colour: "orange", label: "Over pace", isPrimaryPace: true },
-    stridesOverPace: { colour: "#f57e42", label: "Over pace->strides" },
+    stridesOverPace: { colour: "#f57e42", label: "Over pace->strides", isPrimaryPace: false },
     strides: { colour: "red", label: "Strides", isPrimaryPace: true },
-    other: { colour: "gray", label: "Other" },
+    other: { colour: "gray", label: "Other", isPrimaryPace: false },
 };
