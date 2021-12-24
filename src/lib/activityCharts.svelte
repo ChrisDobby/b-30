@@ -2,6 +2,7 @@
     import type { Analysis } from "./types";
     import Doughnut from "svelte-chartjs/src/Doughnut.svelte";
     import Bar from "svelte-chartjs/src/Bar.svelte";
+    import Line from "svelte-chartjs/src/Line.svelte";
     import { CHART_DISPLAY } from "$lib/utils";
 
     export let analysis: Analysis;
@@ -9,6 +10,7 @@
     let displayData;
     let timeData;
     let heartrateData;
+    let speedData;
 
     $: {
         displayData = Object.entries(analysis.percentageOfTimeAtPace).reduce(
@@ -51,9 +53,42 @@
                 },
             ],
         };
+
+        speedData = {
+            labels: analysis.speed,
+            datasets: [
+                {
+                    label: "Pace",
+                    data: analysis.speed,
+                    fill: false,
+                    borderColor: "rgb(75, 192, 192)",
+                    tension: 0.1,
+                },
+            ],
+        };
     }
 </script>
 
+<div>
+    <Line
+        data={speedData}
+        options={{
+            responsive: true,
+            elements: { point: { radius: 0 }, line: { borderWidth: 1 } },
+            scales: {
+                x: { ticks: { display: false } },
+                y: { ticks: { display: false } },
+            },
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: "Pace",
+                },
+            },
+        }}
+    />
+</div>
 <div class="chart">
     <Doughnut
         data={timeData}

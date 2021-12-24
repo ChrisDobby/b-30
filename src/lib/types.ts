@@ -98,7 +98,11 @@ export type PaceAnalysis = {
 
 export type PaceAnalysisWithOther = PaceAnalysis & { other: number };
 
-export type Analysis = { percentageOfTimeAtPace: PaceAnalysisWithOther; averageHeartRateAtPace: PaceAnalysis };
+export type Analysis = {
+    percentageOfTimeAtPace: PaceAnalysisWithOther;
+    averageHeartRateAtPace: PaceAnalysis;
+    speed: number[];
+};
 export type LapAnalysis = ActivityLap & Analysis & { pace: string };
 
 export type AnalysisResult = Analysis & {

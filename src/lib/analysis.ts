@@ -92,7 +92,7 @@ function getAverageFromArray(array: number[]) {
     return Math.round(array.reduce((a, b) => a + b, 0) / array.length || 0);
 }
 
-function createAnalysis(paceAnalysis, heartRateAnalysis, count: number): Analysis {
+function createAnalysis(paceAnalysis, heartRateAnalysis, velocityStream: number[], count: number): Analysis {
     const timeAtPace = {
         recovery: getPercentage(paceAnalysis.recovery, count),
         tempoRecovery: getPercentage(paceAnalysis.tempoRecovery, count),
@@ -124,17 +124,19 @@ function createAnalysis(paceAnalysis, heartRateAnalysis, count: number): Analysi
     return {
         percentageOfTimeAtPace,
         averageHeartRateAtPace,
+        speed: velocityStream.slice(1),
     };
 }
 function createLapAnalysis(
     paces: PacesWithCombinations,
     lap: ActivityLap,
+    lapVelocityStream: number[],
     paceAnalysis,
     heartRateAnalysis,
 ): LapAnalysis {
     return {
         ...lap,
-        ...createAnalysis(paceAnalysis, heartRateAnalysis, lap.distance),
+        ...createAnalysis(paceAnalysis, heartRateAnalysis, lapVelocityStream, lap.distance),
         pace: getPaceForSpeed(paces, lap.averageSpeed) || "other",
     };
 }
@@ -214,12 +216,19 @@ export function analyseActivity(
             fullHeartRateAnalysis[pace].push(lapHeartRate);
         }
 
-        const { lapHeartRate, lapVelocity, ...lap } = lapStream;
-        analysedLaps.push(createLapAnalysis(allPaces, lap, lapPaceAnalysis, lapHeartRateAnalysis));
+        const { lapHeartRate: __, lapVelocity: _, ...lap } = lapStream;
+        analysedLaps.push(
+            createLapAnalysis(allPaces, lap, lapStream.lapVelocity, lapPaceAnalysis, lapHeartRateAnalysis),
+        );
     }
 
     return {
-        ...createAnalysis(fullPaceAnalysis, fullHeartRateAnalysis, distanceStream[distanceStream.length - 1]),
+        ...createAnalysis(
+            fullPaceAnalysis,
+            fullHeartRateAnalysis,
+            velocityStream,
+            distanceStream[distanceStream.length - 1],
+        ),
         laps: analysedLaps,
     };
 }

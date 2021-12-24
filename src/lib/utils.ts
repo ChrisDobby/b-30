@@ -1,6 +1,5 @@
 import type { ApiError, Paces, StravaActivity, Times } from "./types";
-import { ApiResult } from "./types";
-import { MeasurementPreference } from "./types";
+import { ApiResult, MeasurementPreference } from "./types";
 import { format } from "date-fns";
 
 export const METRES_IN_KM = 1000;
